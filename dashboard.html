@@ -3,117 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aspirant Dashboard | Group 2A Tracker</title>
+    <title>Live Rankings | Group 2A Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* Dashboard Specific Tweaks */
-        .dashboard-wrapper {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .db-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--purple-light);
-            padding-bottom: 20px;
-        }
-        .db-header h1 { color: var(--purple-deep); margin: 0; font-size: 1.5rem; }
-        
-        /* Grid Layout */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            align-items: start;
-        }
-
-        .cat-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid var(--purple-light);
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(76, 29, 149, 0.05);
-        }
-
-        .cat-header {
-            background: var(--purple-deep);
-            color: white;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .cat-name { font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; }
-        
-        .column-filter {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 0.75rem;
-            padding: 4px;
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-        }
-        .column-filter option { color: var(--text-dark); }
-
-        .score-list {
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 5px 0;
-        }
-
-        .score-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--purple-light);
-            font-size: 0.9rem;
-        }
-
-        .score-item:last-child { border-bottom: none; }
-        
-        .cand-name { color: var(--text-dark); font-weight: 500; display: flex; flex-direction: column; }
-        .cand-tags { font-size: 0.7rem; color: var(--purple-mid); font-weight: 700; margin-top: 2px; }
-        .cand-score { font-weight: 800; color: #059669; font-size: 1rem; }
-
-        .stats-footer {
-            background: var(--purple-light);
-            padding: 8px 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--purple-deep);
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .db-header { flex-direction: column; gap: 15px; text-align: center; }
-        }
-    </style>
 </head>
 <body>
 
 <div class="dashboard-wrapper">
     <header class="db-header">
-        <div>
-            <h1>Live Rankings Dashboard</h1>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 5px 0 0 0;">Real-time data for TNPSC Group 2A</p>
+        <h1>Live Analysis Dashboard</h1>
+        <div style="display:flex; gap:10px;">
+            <button onclick="refreshData()" class="nav-btn" style="background:transparent; border:1px solid white; cursor:pointer;">Refresh</button>
+            <a href="index.html" class="nav-btn" style="background:white; color:var(--dark-purple);">+ Add My Score</a>
         </div>
-        <a href="index.html" class="nav-link">← Submit My Marks</a>
     </header>
 
-    <div class="category-grid" id="mainGrid">
-        </div>
+    <div class="category-grid" id="mainGrid"></div>
 </div>
 
-<footer class="initiative-footer">
+<div class="footer-sig">
     An Allwin-Sugitha Initiative
-</footer>
+</div>
 
 <script>
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
@@ -123,13 +33,12 @@
     const communities = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
     let rawData = [];
 
-    // 1. Initial Load
     document.addEventListener('DOMContentLoaded', async () => {
         setupGrid();
         await refreshData();
     });
 
-    // 2. Build Columns
+    // 1. Build the Column Containers
     function setupGrid() {
         const grid = document.getElementById('mainGrid');
         communities.forEach(comm => {
@@ -137,79 +46,82 @@
             card.className = 'cat-card';
             card.innerHTML = `
                 <div class="cat-header">
-                    <div class="cat-name">${comm}</div>
-                    <select class="column-filter" onchange="filterColumn('${comm}', this.value)">
-                        <option value="ALL">All Entries</option>
-                        <option value="W">Woman</option>
-                        <option value="PSTM">PSTM</option>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="cat-name">${comm}</span>
+                        <span id="count-${comm}" style="color:white; font-size:0.7rem; opacity:0.8;">0</span>
+                    </div>
+                    <select class="column-filter" onchange="renderList('${comm}', this.value)">
+                        <option value="ALL">All entries</option>
+                        <option value="W">Women Only</option>
+                        <option value="PSTM">PSTM Only</option>
                         <option value="W_PSTM">W + PSTM</option>
                     </select>
                 </div>
-                <div class="score-list" id="list-${comm}">
-                    <p style="padding:20px; text-align:center; font-size:0.8rem; color:gray;">Loading...</p>
-                </div>
-                <div class="stats-footer" id="count-${comm}">0 Candidates</div>
+                <div class="score-list" id="list-${comm}"></div>
+                <div class="stats-footer">Sorted by Marks</div>
             `;
             grid.appendChild(card);
         });
     }
 
-    // 3. Fetch from Supabase
+    // 2. Fetch data from Supabase
     async function refreshData() {
         const { data, error } = await supabaseClient
             .from('candidate_scores')
             .select('*')
             .order('total_correct', { ascending: false });
 
-        if (error) {
-            console.error(error);
-            return;
+        if (!error) {
+            rawData = data;
+            communities.forEach(comm => renderList(comm, "ALL"));
+        } else {
+            console.error("Fetch error:", error);
         }
-        rawData = data;
-        communities.forEach(comm => renderList(comm, "ALL"));
     }
 
-    // 4. Render/Filter Logic
+    // 3. Render and Filter logic
     function renderList(comm, filterType) {
         const container = document.getElementById(`list-${comm}`);
-        const countLabel = document.getElementById(`count-${comm}`);
+        const countDisplay = document.getElementById(`count-${comm}`);
         
         let filtered = rawData.filter(d => d.category === comm);
-
+        
         if (filterType === "W") filtered = filtered.filter(d => d.is_woman);
         if (filterType === "PSTM") filtered = filtered.filter(d => d.is_pstm);
         if (filterType === "W_PSTM") filtered = filtered.filter(d => d.is_woman && d.is_pstm);
 
-        countLabel.innerText = `${filtered.length} Candidates`;
+        countDisplay.innerText = filtered.length;
 
         if (filtered.length === 0) {
-            container.innerHTML = `<p style="padding:20px; text-align:center; font-size:0.8rem; color:#94a3b8;">No data yet</p>`;
+            container.innerHTML = `<p style="padding:20px; text-align:center; font-size:0.7rem; color:var(--text-muted);">No data</p>`;
             return;
         }
 
         container.innerHTML = filtered.map(d => `
             <div class="score-item">
-                <div class="cand-name">
-                    ${d.full_name}
-                    <span class="cand-tags">${getTags(d)}</span>
+                <div style="display:flex; flex-direction:column; max-width:70%;">
+                    <span class="cand-name">${d.full_name}</span>
+                    <div style="display:flex; gap:4px; margin-top:3px; flex-wrap:wrap;">
+                        ${generateMiniTags(d)}
+                    </div>
                 </div>
                 <div class="cand-score">${d.total_correct}</div>
             </div>
         `).join('');
     }
 
-    function filterColumn(comm, val) {
-        renderList(comm, val);
-    }
-
-    function getTags(d) {
-        let tags = [];
-        if (d.is_woman) tags.push('W');
-        if (d.is_pstm) tags.push('PSTM');
-        if (d.is_exser) tags.push('Ex');
-        if (d.is_dw) tags.push('DW');
-        if (d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md) tags.push('PwD');
-        return tags.length ? tags.join(' • ') : '';
+    // 4. Compact Tag Generator
+    function generateMiniTags(d) {
+        let tags = '';
+        const tagStyle = "font-size:0.6rem; padding:1px 4px; background:#f3f4f6; border:1px solid #ddd6fe; border-radius:3px; font-weight:700; color:var(--mid-purple);";
+        
+        if (d.is_woman) tags += `<span style="${tagStyle}">W</span>`;
+        if (d.is_pstm) tags += `<span style="${tagStyle}">P</span>`;
+        if (d.is_exser) tags += `<span style="${tagStyle}">Ex</span>`;
+        if (d.is_dw) tags += `<span style="${tagStyle}">DW</span>`;
+        if (d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md) tags += `<span style="${tagStyle}">PwD</span>`;
+        
+        return tags;
     }
 </script>
 </body>
