@@ -140,3 +140,45 @@ input, select {
     color: white;
     box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
 }
+
+/* --- MODERN FILTER DROPDOWN --- */
+.filter-group {
+    background: #fdfbff;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-purple);
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--primary-purple);
+    text-transform: uppercase;
+}
+
+.smart-select {
+    width: 100%;
+    padding: 10px;
+    border: 1.5px solid var(--border-purple);
+    border-radius: 6px;
+    background: white;
+    font-size: 0.85rem;
+    color: var(--dark-text);
+    cursor: pointer;
+    outline: none;
+}
+
+.smart-select:focus {
+    border-color: var(--primary-purple);
+}
+
+.score-row small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--muted-purple);
+    font-weight: 600;
+}
