@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Rankings | Group 2A Tracker</title>
+    <title>Dashboard | Group 2A Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="dashboard-wrapper">
-    <header class="db-header">
-        <h1>Live Analysis Dashboard</h1>
-        <div style="display:flex; gap:10px;">
-            <button onclick="refreshData()" class="nav-btn" style="background:transparent; border:1px solid white; cursor:pointer;">Refresh</button>
-            <a href="index.html" class="nav-btn" style="background:white; color:var(--dark-purple);">+ Add My Score</a>
-        </div>
-    </header>
+<header class="db-header">
+    <div>
+        <h1 style="margin:0; font-size:1.4rem;">Live Analysis Dashboard</h1>
+        <p style="margin:5px 0 0 0; font-size:0.8rem; color:var(--text-dim);">Real-time community rankings</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <button onclick="refreshData()" class="nav-btn" style="background:transparent; border:1px solid var(--primary-purple);">Refresh</button>
+        <a href="index.html" class="nav-btn">Add My Score</a>
+    </div>
+</header>
 
-    <div class="category-grid" id="mainGrid"></div>
-</div>
+<div class="category-grid" id="mainGrid"></div>
 
-<div class="footer-sig">
-    An Allwin-Sugitha Initiative
-</div>
+<div class="footer-sig">An Allwin-Sugitha Initiative</div>
 
 <script>
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
@@ -38,7 +37,6 @@
         await refreshData();
     });
 
-    // 1. Build the Column Containers
     function setupGrid() {
         const grid = document.getElementById('mainGrid');
         communities.forEach(comm => {
@@ -48,80 +46,39 @@
                 <div class="cat-header">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span class="cat-name">${comm}</span>
-                        <span id="count-${comm}" style="color:white; font-size:0.7rem; opacity:0.8;">0</span>
+                        <span id="count-${comm}" style="color:var(--text-dim); font-size:0.75rem;">0</span>
                     </div>
                     <select class="column-filter" onchange="renderList('${comm}', this.value)">
                         <option value="ALL">All entries</option>
-                        <option value="W">Women Only</option>
-                        <option value="PSTM">PSTM Only</option>
+                        <option value="W">Women</option>
+                        <option value="PSTM">PSTM</option>
                         <option value="W_PSTM">W + PSTM</option>
                     </select>
                 </div>
-                <div class="score-list" id="list-${comm}"></div>
-                <div class="stats-footer">Sorted by Marks</div>
+                <div class="score-list" id="list-${comm}" style="flex-grow:1; overflow-y:auto;"></div>
             `;
             grid.appendChild(card);
         });
     }
 
-    // 2. Fetch data from Supabase
     async function refreshData() {
-        const { data, error } = await supabaseClient
-            .from('candidate_scores')
-            .select('*')
-            .order('total_correct', { ascending: false });
-
-        if (!error) {
-            rawData = data;
-            communities.forEach(comm => renderList(comm, "ALL"));
-        } else {
-            console.error("Fetch error:", error);
-        }
+        const { data, error } = await supabaseClient.from('candidate_scores').select('*').order('total_correct', { ascending: false });
+        if (!error) { rawData = data; communities.forEach(comm => renderList(comm, "ALL")); }
     }
 
-    // 3. Render and Filter logic
     function renderList(comm, filterType) {
         const container = document.getElementById(`list-${comm}`);
         const countDisplay = document.getElementById(`count-${comm}`);
-        
         let filtered = rawData.filter(d => d.category === comm);
-        
         if (filterType === "W") filtered = filtered.filter(d => d.is_woman);
         if (filterType === "PSTM") filtered = filtered.filter(d => d.is_pstm);
         if (filterType === "W_PSTM") filtered = filtered.filter(d => d.is_woman && d.is_pstm);
-
         countDisplay.innerText = filtered.length;
-
-        if (filtered.length === 0) {
-            container.innerHTML = `<p style="padding:20px; text-align:center; font-size:0.7rem; color:var(--text-muted);">No data</p>`;
-            return;
-        }
-
-        container.innerHTML = filtered.map(d => `
-            <div class="score-item">
-                <div style="display:flex; flex-direction:column; max-width:70%;">
-                    <span class="cand-name">${d.full_name}</span>
-                    <div style="display:flex; gap:4px; margin-top:3px; flex-wrap:wrap;">
-                        ${generateMiniTags(d)}
-                    </div>
-                </div>
-                <div class="cand-score">${d.total_correct}</div>
-            </div>
-        `).join('');
-    }
-
-    // 4. Compact Tag Generator
-    function generateMiniTags(d) {
-        let tags = '';
-        const tagStyle = "font-size:0.6rem; padding:1px 4px; background:#f3f4f6; border:1px solid #ddd6fe; border-radius:3px; font-weight:700; color:var(--mid-purple);";
-        
-        if (d.is_woman) tags += `<span style="${tagStyle}">W</span>`;
-        if (d.is_pstm) tags += `<span style="${tagStyle}">P</span>`;
-        if (d.is_exser) tags += `<span style="${tagStyle}">Ex</span>`;
-        if (d.is_dw) tags += `<span style="${tagStyle}">DW</span>`;
-        if (d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md) tags += `<span style="${tagStyle}">PwD</span>`;
-        
-        return tags;
+        container.innerHTML = filtered.length === 0 ? `<p style="padding:20px; text-align:center; font-size:0.8rem; color:var(--text-dim);">No Data</p>` :
+            filtered.map(d => `<div class="score-item">
+                <span style="font-size:0.85rem;">${d.full_name}</span>
+                <span class="cand-score">${d.total_correct}</span>
+            </div>`).join('');
     }
 </script>
 </body>
