@@ -9,32 +9,28 @@
 </head>
 <body>
 
-<nav class="top-nav">
-    <a href="dashboard.html" class="nav-btn">View Rankings →</a>
-</nav>
-
 <div class="main-content">
     <div class="form-card">
         <header>
             <h1>Group 2A 2026</h1>
-            <p>Community Rank Predictor</p>
+            <p>Score Submission Portal</p>
         </header>
 
         <form id="scoreForm">
             <div class="field">
-                <label class="field-label">Nickname</label>
+                <label>Nickname</label>
                 <input type="text" id="full_name" placeholder="Optional">
             </div>
 
             <div class="field">
-                <label class="field-label">Total Correct Questions</label>
-                <input type="number" id="total_correct" required min="0" max="200" placeholder="e.g. 170">
+                <label>Total Correct Questions</label>
+                <input type="number" id="total_correct" required min="0" max="200">
             </div>
 
             <div class="field">
-                <label class="field-label">Community</label>
+                <label>Community</label>
                 <select id="category" required>
-                    <option value="" disabled selected>Select Community</option>
+                    <option value="" disabled selected>Select</option>
                     <option value="GT">GT</option>
                     <option value="BC">BC</option>
                     <option value="BCM">BCM</option>
@@ -45,28 +41,23 @@
                 </select>
             </div>
 
-            <div class="check-section-title">Reservations</div>
             <div class="check-container">
                 <label class="check-item"><input type="checkbox" id="is_woman"> Woman</label>
                 <label class="check-item"><input type="checkbox" id="is_pstm"> PSTM</label>
-                <label class="check-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
-                <label class="check-item"><input type="checkbox" id="is_dw"> Destitute Widow (DW)</label>
-                
                 <div class="dotted-divider"></div>
-
                 <label class="check-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
                 <label class="check-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
                 <label class="check-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC / MuD</label>
                 <label class="check-item"><input type="checkbox" id="is_asd_md"> ASD / ID / SLD / MI / MD</label>
             </div>
 
-            <button type="submit" id="submitBtn">Submit My Marks</button>
+            <button type="submit" id="submitBtn" class="btn-primary" style="width:100%; margin-bottom:15px;">Submit Marks</button>
+            <a href="dashboard.html" class="btn-outline" style="display:block; text-align:center;">View All Rankings →</a>
         </form>
     </div>
 </div>
 
 <div class="footer-sig">An Allwin-Sugitha Initiative</div>
-
 <script src="script.js"></script>
 </body>
 </html>
