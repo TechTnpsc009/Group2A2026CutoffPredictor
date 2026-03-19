@@ -1,20 +1,19 @@
-/* --- UNIVERSAL DARK THEME --- */
 :root {
-    --bg-dark: #0f0720;           /* Deepest Purple/Black */
-    --card-dark: #1e113a;         /* Card background */
-    --primary-purple: #7c3aed;    /* Vibrant Purple for Buttons/Links */
-    --border-purple: #3b2a63;     /* Subtle border */
-    --text-main: #f5f3ff;         /* Off-white text */
-    --text-dim: #a78bfa;          /* Muted purple text */
-    --success-green: #10b981;     /* Score Color */
+    --primary-purple: #6d28d9;    /* Rich Royal Purple */
+    --light-purple: #f5f3ff;      /* Very Light Background Purple */
+    --border-purple: #ddd6fe;     /* Border Purple */
+    --dark-text: #2e1065;         /* Deepest Purple for Text */
+    --muted-purple: #7c3aed;      /* Medium Accent Purple */
+    --white: #ffffff;
+    --success: #059669;           /* Green for Scores */
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--light-purple);
+    color: var(--dark-text);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
     margin: 0;
-    min-height: 100vh;
+    line-height: 1.5;
 }
 
 /* --- NAVIGATION --- */
@@ -30,52 +29,85 @@ body {
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
+    box-shadow: 0 4px 6px -1px rgba(109, 40, 217, 0.3);
     transition: 0.2s;
 }
 
-.nav-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.nav-btn:hover { background: var(--dark-text); transform: translateY(-1px); }
 
-/* --- SUBMISSION FORM & DASHBOARD CARDS --- */
+/* --- CENTERED FORM CARD --- */
 .main-content {
     display: flex;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 20px;
 }
 
 .form-card {
-    background: var(--card-dark);
+    background: var(--white);
     width: 100%;
-    max-width: 440px;
+    max-width: 450px;
     padding: 40px;
     border-radius: 20px;
     border: 1px solid var(--border-purple);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(109, 40, 217, 0.1);
 }
 
-.form-card h1 { color: white; margin: 0 0 10px 0; text-align: center; }
-.form-card p { color: var(--text-dim); text-align: center; margin-bottom: 30px; font-size: 0.9rem; }
+.form-card h1 { 
+    color: var(--primary-purple); 
+    margin: 0 0 10px 0; 
+    text-align: center; 
+    font-size: 1.6rem;
+}
 
-.field { margin-bottom: 22px; }
-label { display: block; font-weight: 700; font-size: 0.8rem; margin-bottom: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.form-card p { 
+    text-align: center; 
+    color: var(--muted-purple); 
+    margin-bottom: 30px; 
+    font-size: 0.9rem; 
+}
+
+/* --- INPUT FIELDS --- */
+.field { margin-bottom: 20px; }
+label.field-label { 
+    display: block; 
+    font-weight: 800; 
+    font-size: 0.75rem; 
+    margin-bottom: 8px; 
+    color: var(--primary-purple); 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
 
 input, select {
     width: 100%;
-    padding: 14px;
-    background: #2d1b4d;
-    border: 1px solid var(--border-purple);
+    padding: 12px;
+    background: white;
+    border: 1.5px solid var(--border-purple);
     border-radius: 8px;
-    color: white;
+    color: var(--dark-text);
     font-size: 1rem;
     box-sizing: border-box;
 }
 
-input:focus, select:focus { outline: none; border-color: var(--primary-purple); background: #37225c; }
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+}
 
-/* --- VERTICAL CHECKBOX LIST (Stable Alignment) --- */
-.check-grid {
-    background: rgba(45, 27, 77, 0.5);
+/* --- CHECKBOX ALIGNMENT (THE FIX) --- */
+.check-section-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--primary-purple);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.check-container {
+    background: #fdfbff;
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border-purple);
@@ -84,84 +116,105 @@ input:focus, select:focus { outline: none; border-color: var(--primary-purple); 
 
 .check-item {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-start; /* Keeps box at top of line */
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     cursor: pointer;
     font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-main);
+    font-weight: 600;
 }
+
+.check-item:last-child { margin-bottom: 0; }
 
 .check-item input[type="checkbox"] {
     width: 18px;
     height: 18px;
     margin: 0;
     flex-shrink: 0;
-    cursor: pointer;
     accent-color: var(--primary-purple);
-}
-
-.dotted-divider { border-top: 1px dotted var(--border-purple); margin: 15px 0; }
-
-button[type="submit"] {
-    width: 100%;
-    background: var(--primary-purple);
-    color: white;
-    padding: 16px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 800;
     cursor: pointer;
 }
 
-/* --- DASHBOARD SPECIFIC --- */
+.dotted-divider { 
+    border-top: 2px dotted var(--border-purple); 
+    margin: 15px 0; 
+}
+
+/* --- DASHBOARD LAYOUT --- */
 .db-header {
-    background: var(--card-dark);
-    padding: 20px;
-    margin: 10px 2%;
-    border-radius: 12px;
-    border: 1px solid var(--border-purple);
+    background: var(--white);
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border-purple);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 25px;
 }
 
 .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 15px;
-    padding: 0 2%;
+    padding: 0 40px;
 }
 
 .cat-card {
-    background: var(--card-dark);
+    background: var(--white);
     border: 1px solid var(--border-purple);
     border-radius: 12px;
-    height: 75vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
-.cat-header { background: #2d1b4d; padding: 15px; border-radius: 12px 12px 0 0; }
-.cat-name { font-weight: 800; color: white; font-size: 1.1rem; }
+.cat-header {
+    background: var(--primary-purple);
+    padding: 12px 15px;
+    color: white;
+}
 
-.column-filter { margin-top: 10px; padding: 6px; font-size: 0.75rem; }
+.cat-name { font-weight: 800; font-size: 1rem; }
+
+.column-filter {
+    margin-top: 10px;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 0.75rem;
+}
 
 .score-item {
     display: flex;
     justify-content: space-between;
-    padding: 12px 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--light-purple);
 }
 
-.cand-score { color: var(--success-green); font-weight: 900; }
+.cand-score { color: var(--success); font-weight: 800; }
 
 .footer-sig {
     text-align: right;
-    padding: 30px 5%;
+    padding: 30px 40px;
     font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-dim);
+    font-weight: 700;
+    color: var(--primary-purple);
+    opacity: 0.7;
 }
+
+button[type="submit"] {
+    width: 100%;
+    background: var(--primary-purple);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+}
+
+button:hover { background: var(--dark-text); }
