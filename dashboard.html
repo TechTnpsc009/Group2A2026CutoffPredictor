@@ -13,7 +13,7 @@
     <header class="db-header">
         <div>
             <h1 style="color:var(--primary-purple); margin:0; font-size:1.6rem;">Live Rankings</h1>
-            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#6b7280;">Communal & Special Reservation Analysis</p>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#6b7280;">Real-time communal rank analysis</p>
         </div>
         <div style="display:flex; gap:10px;">
             <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.7rem; padding:6px 12px;">Expand All</button>
@@ -22,15 +22,14 @@
     </header>
 
     <div style="margin-bottom: 20px;">
-        <input type="text" id="globalSearch" placeholder="Search nickname..." onkeyup="handleSearch()" 
-               style="width:100%; padding:12px; border-radius:10px; border:1.5px solid var(--border-purple);">
+        <input type="text" id="globalSearch" placeholder="Search by nickname..." onkeyup="handleSearch()">
     </div>
 
     <div id="accordion-root">
         <p style="text-align:center; padding:40px; color:var(--primary-purple);">Loading community data...</p>
     </div>
     
-    <div style="margin-top:40px; text-align:center; padding-bottom: 40px;">
+    <div style="margin-top:40px; text-align:center; padding-bottom: 60px;">
         <a href="index.html" class="btn-primary" style="padding: 15px 50px;">Add your score</a>
     </div>
 </div>
@@ -60,28 +59,31 @@
         const root = document.getElementById('accordion-root');
         root.innerHTML = communities.map(comm => {
             const list = allData.filter(d => d.category === comm);
+            const has = (key) => list.some(d => d[key]);
+
             return `
                 <div class="accordion-item" id="item-${comm}">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
                         <div>
-                            <span class="cat-name">${comm}</span>
+                            <span class="cat-name" style="font-weight:800;">${comm}</span>
                             <span style="font-size:0.75rem; color:#6b7280; margin-left:10px;">(${list.length} total)</span>
                         </div>
-                        <span class="arrow">▾</span>
+                        <span class="arrow" style="font-weight:bold;">▾</span>
                     </div>
                     <div class="accordion-content">
                         <div class="filter-group">
-                            <label class="filter-label">Refine by Rotation:</label>
+                            <label class="filter-label">Rotation Filter:</label>
                             <select class="smart-select" onchange="applyFilter('${comm}', this.value)">
                                 <option value="G"> (G) General / All</option>
-                                <option value="G_PSTM"> (G) PSTM</option>
-                                <option value="G_EXSER"> (G) Ex-Serviceman</option>
-                                <option value="G_EXSER_PSTM"> (G) Ex-Serviceman (PSTM)</option>
-                                <option value="W"> (W) Women Only</option>
-                                <option value="W_PSTM"> (W) PSTM</option>
-                                <option value="DW"> (DW) Destitute Widow</option>
-                                <option value="DW_PSTM"> (DW) PSTM</option>
-                                <option value="PwD"> PwD (Physically Challenged)</option>
+                                ${has('is_pstm') ? '<option value="G_PSTM"> (G) PSTM</option>' : ''}
+                                ${has('is_exser') ? '<option value="G_EXSER"> (G) Ex-Serviceman</option>' : ''}
+                                ${has('is_woman') ? '<option value="W"> (W) Women Only</option>' : ''}
+                                ${has('is_woman') && has('is_pstm') ? '<option value="W_PSTM"> (W) PSTM</option>' : ''}
+                                ${has('is_dw') ? '<option value="DW"> (DW) Destitute Widow</option>' : ''}
+                                ${has('is_vi_lv') ? '<option value="VI_LV"> (G) LV / VI</option>' : ''}
+                                ${has('is_hi_hh') ? '<option value="HI_HH"> (G) HI / HH</option>' : ''}
+                                ${has('is_ld_cp') ? '<option value="LD_CP"> (G) LD / CP / LC / DF / AC / MuD</option>' : ''}
+                                ${has('is_asd_md') ? '<option value="ASD_MD"> (G) ASD / ID / SLD / MI / MD</option>' : ''}
                             </select>
                         </div>
                         <div id="list-container-${comm}">${renderList(list)}</div>
@@ -93,23 +95,22 @@
 
     function applyFilter(comm, type) {
         let filtered = allData.filter(d => d.category === comm);
-
         switch(type) {
             case 'G_PSTM': filtered = filtered.filter(d => d.is_pstm); break;
             case 'G_EXSER': filtered = filtered.filter(d => d.is_exser); break;
-            case 'G_EXSER_PSTM': filtered = filtered.filter(d => d.is_exser && d.is_pstm); break;
             case 'W': filtered = filtered.filter(d => d.is_woman); break;
             case 'W_PSTM': filtered = filtered.filter(d => d.is_woman && d.is_pstm); break;
             case 'DW': filtered = filtered.filter(d => d.is_dw); break;
-            case 'DW_PSTM': filtered = filtered.filter(d => d.is_dw && d.is_pstm); break;
-            case 'PwD': filtered = filtered.filter(d => (d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md)); break;
+            case 'VI_LV': filtered = filtered.filter(d => d.is_vi_lv); break;
+            case 'HI_HH': filtered = filtered.filter(d => d.is_hi_hh); break;
+            case 'LD_CP': filtered = filtered.filter(d => d.is_ld_cp); break;
+            case 'ASD_MD': filtered = filtered.filter(d => d.is_asd_md); break;
         }
-
         document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered);
     }
 
     function renderList(list) {
-        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.85rem; padding:20px; text-align:center;">No entries match this rotation.</p>';
+        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.85rem; padding:20px; text-align:center;">No entries match this filter.</p>';
         return list.map((d, index) => {
             let tags = [];
             if(d.is_woman) tags.push("W");
@@ -117,12 +118,14 @@
             if(d.is_exser) tags.push("EXSER");
             if(d.is_dw) tags.push("DW");
             if(d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md) tags.push("PwD");
+            
+            let badge = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
 
             return `
                 <div class="score-row">
                     <div>
-                        <span style="font-weight:700;">${index < 3 ? ['🥇','🥈','🥉'][index] : ''}${d.full_name}</span>
-                        <span style="display:block; font-size:0.7rem; color:var(--muted-purple); font-weight:700;">${tags.join(' • ') || 'General'}</span>
+                        <span style="font-weight:700;">${badge}${d.full_name}</span>
+                        <span style="display:block; font-size:0.7rem; color:var(--primary-purple); font-weight:700;">${tags.join(' • ') || 'General'}</span>
                     </div>
                     <div style="text-align:right;">
                         <span class="score-val">${d.total_correct}</span>
@@ -133,27 +136,31 @@
         }).join('');
     }
 
-    // Reuse previous toggleAccordion, toggleAll, and handleSearch functions
-    function toggleAccordion(header) {
-        header.classList.toggle('active');
-        header.nextElementSibling.classList.toggle('open');
-        header.querySelector('.arrow').innerText = header.nextElementSibling.classList.contains('open') ? '▴' : '▾';
-    }
-
-    function toggleAll(expand) {
-        document.querySelectorAll('.accordion-header').forEach(h => {
-            const content = h.nextElementSibling;
-            if (expand) { h.classList.add('active'); content.classList.add('open'); h.querySelector('.arrow').innerText = '▴'; }
-            else { h.classList.remove('active'); content.classList.remove('open'); h.querySelector('.arrow').innerText = '▾'; }
-        });
-    }
-
     function handleSearch() {
         const q = document.getElementById('globalSearch').value.toLowerCase();
         document.querySelectorAll('.accordion-item').forEach(item => {
             const match = item.innerText.toLowerCase().includes(q);
             item.style.display = match ? 'block' : 'none';
-            if(q && match) { item.querySelector('.accordion-header').classList.add('active'); item.querySelector('.accordion-content').classList.add('open'); }
+            if(q && match) {
+                item.querySelector('.accordion-header').classList.add('active');
+                item.querySelector('.accordion-content').classList.add('open');
+            }
+        });
+    }
+
+    function toggleAccordion(header) {
+        header.classList.toggle('active');
+        const content = header.nextElementSibling;
+        content.classList.toggle('open');
+        header.querySelector('.arrow').innerText = content.classList.contains('open') ? '▴' : '▾';
+    }
+
+    function toggleAll(expand) {
+        document.querySelectorAll('.accordion-header').forEach(h => {
+            const content = h.nextElementSibling;
+            h.classList.toggle('active', expand);
+            content.classList.toggle('open', expand);
+            h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
         });
     }
 
