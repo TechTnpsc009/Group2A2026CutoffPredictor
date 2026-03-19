@@ -1,103 +1,167 @@
-/* --- SUBMISSION FORM UI --- */
+/* --- UNIVERSAL DARK THEME --- */
+:root {
+    --bg-dark: #0f0720;           /* Deepest Purple/Black */
+    --card-dark: #1e113a;         /* Card background */
+    --primary-purple: #7c3aed;    /* Vibrant Purple for Buttons/Links */
+    --border-purple: #3b2a63;     /* Subtle border */
+    --text-main: #f5f3ff;         /* Off-white text */
+    --text-dim: #a78bfa;          /* Muted purple text */
+    --success-green: #10b981;     /* Score Color */
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* --- NAVIGATION --- */
+.top-nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 5%;
+}
+
+.nav-btn {
+    background: var(--primary-purple);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.nav-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* --- SUBMISSION FORM & DASHBOARD CARDS --- */
 .main-content {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 20px;
-    margin-top: -40px; /* Pulls form up slightly for better centering */
+    padding: 40px 20px;
 }
 
 .form-card {
-    background: white;
+    background: var(--card-dark);
     width: 100%;
-    max-width: 420px;
-    padding: 35px;
+    max-width: 440px;
+    padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(46, 16, 101, 0.15);
     border: 1px solid var(--border-purple);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.form-card h1 { text-align: center; margin: 0; font-size: 1.6rem; color: var(--dark-purple); }
-.form-card p { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 25px 0; }
+.form-card h1 { color: white; margin: 0 0 10px 0; text-align: center; }
+.form-card p { color: var(--text-dim); text-align: center; margin-bottom: 30px; font-size: 0.9rem; }
 
-.field { margin-bottom: 20px; }
-.section-label { 
-    display: block; 
-    font-size: 0.75rem; 
-    font-weight: 800; 
-    margin-bottom: 12px; 
-    color: var(--mid-purple);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
+.field { margin-bottom: 22px; }
+label { display: block; font-weight: 700; font-size: 0.8rem; margin-bottom: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 
 input, select {
     width: 100%;
-    padding: 12px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 10px;
+    padding: 14px;
+    background: #2d1b4d;
+    border: 1px solid var(--border-purple);
+    border-radius: 8px;
+    color: white;
     font-size: 1rem;
     box-sizing: border-box;
 }
 
-/* --- THE CHECKBOX FIX --- */
+input:focus, select:focus { outline: none; border-color: var(--primary-purple); background: #37225c; }
+
+/* --- VERTICAL CHECKBOX LIST (Stable Alignment) --- */
 .check-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns */
-    column-gap: 20px;
-    row-gap: 15px;
-    background: #faf5ff;
+    background: rgba(45, 27, 77, 0.5);
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border-purple);
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .check-item {
-    display: grid;
-    grid-template-columns: 20px 1fr; /* Fixed width for checkbox, rest for text */
-    align-items: center; /* Vertical center */
-    gap: 10px; /* Space between box and text */
-    font-size: 0.85rem;
-    font-weight: 600;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
     cursor: pointer;
-    line-height: 1.3;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
 }
 
 .check-item input[type="checkbox"] {
     width: 18px;
     height: 18px;
+    margin: 0;
+    flex-shrink: 0;
     cursor: pointer;
-    accent-color: var(--mid-purple); /* Makes the checkmark purple */
+    accent-color: var(--primary-purple);
 }
 
-.full-width { 
-    grid-column: span 2; 
-}
-
-.dotted-divider {
-    grid-column: span 2;
-    border-top: 2px dotted var(--border-purple);
-    margin: 5px 0;
-}
+.dotted-divider { border-top: 1px dotted var(--border-purple); margin: 15px 0; }
 
 button[type="submit"] {
     width: 100%;
-    background: var(--dark-purple);
+    background: var(--primary-purple);
     color: white;
     padding: 16px;
     border: none;
-    border-radius: 12px;
-    font-size: 1.05rem;
-    font-weight: 700;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
 }
 
-button[type="submit"]:hover {
-    background: var(--mid-purple);
+/* --- DASHBOARD SPECIFIC --- */
+.db-header {
+    background: var(--card-dark);
+    padding: 20px;
+    margin: 10px 2%;
+    border-radius: 12px;
+    border: 1px solid var(--border-purple);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-button[type="submit"]:active {
-    transform: scale(0.98);
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 15px;
+    padding: 0 2%;
+}
+
+.cat-card {
+    background: var(--card-dark);
+    border: 1px solid var(--border-purple);
+    border-radius: 12px;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.cat-header { background: #2d1b4d; padding: 15px; border-radius: 12px 12px 0 0; }
+.cat-name { font-weight: 800; color: white; font-size: 1.1rem; }
+
+.column-filter { margin-top: 10px; padding: 6px; font-size: 0.75rem; }
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.cand-score { color: var(--success-green); font-weight: 900; }
+
+.footer-sig {
+    text-align: right;
+    padding: 30px 5%;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-dim);
 }
