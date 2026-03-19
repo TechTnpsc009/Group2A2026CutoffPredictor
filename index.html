@@ -4,119 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TNPSC Group 2A Cutoff Predictor</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; line-height: 1.6; background-color: #f9fafb; color: #374151; }
-        h2 { text-align: center; color: #111827; }
-        form { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .field { margin-bottom: 18px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.95rem; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 5px; box-sizing: border-box; font-size: 1rem; }
-        input:focus { outline: none; border-color: #2563eb; ring: 2px #bfdbfe; }
-        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid #e5e7eb; padding: 12px; border-radius: 5px; background: #f3f4f6; }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; }
-        .checkbox-item input { width: auto; margin: 0; cursor: pointer; }
-        button { background: #2563eb; color: white; border: none; padding: 14px; width: 100%; cursor: pointer; border-radius: 5px; font-size: 16px; font-weight: 600; transition: background 0.2s; }
-        button:hover { background: #1d4ed8; }
-        button:disabled { background: #9ca3af; cursor: not-allowed; }
-    </style>
 </head>
 <body>
-    <h2>Group 2A Score Submission</h2>
-    <form id="scoreForm">
-        <div class="field">
-            <label>Full Name (Optional)</label>
-            <input type="text" id="full_name" placeholder="Enter Nickname">
-        </div>
-        
-        <div class="field">
-            <label>Total Correct Questions (0-200) *</label>
-            <input type="number" id="total_correct" required min="0" max="200" placeholder="e.g. 165">
-        </div>
-
-        <div class="field">
-            <label>Community *</label>
-            <select id="category" required>
-                <option value="" disabled selected>Select Category</option>
-                <option value="GT">GT</option>
-                <option value="BC">BC (OBCM)</option>
-                <option value="BCM">BCM</option>
-                <option value="MBC">MBC/DC</option>
-                <option value="SC">SC</option>
-                <option value="SCA">SC(A)</option>
-                <option value="ST">ST</option>
-            </select>
-        </div>
-
-        <div class="field">
-            <label>Reservations / Special Categories</label>
-            <div class="checkbox-group">
-                <label class="checkbox-item"><input type="checkbox" id="is_woman"> Woman</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_pstm"> PSTM</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_dw"> Destitute Widow</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC</label>
-                <label class="checkbox-item"><input type="checkbox" id="is_asd_md"> ASD / ID / MD</label>
+    <div class="container">
+        <h2>Group 2A Score Submission</h2>
+        <form id="scoreForm">
+            <div class="field">
+                <label>Full Name (Optional)</label>
+                <input type="text" id="full_name" placeholder="Enter Nickname">
             </div>
-        </div>
-
-        <button type="submit" id="submitBtn">Submit & See My Rank</button>
-    </form>
-
-    <script>
-        // Configuration
-        const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
-        const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
-        
-        // Use a unique name for the client to avoid conflicts with the library global
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
-        const scoreForm = document.getElementById('scoreForm');
-        const submitBtn = document.getElementById('submitBtn');
-
-        scoreForm.onsubmit = async (e) => {
-            e.preventDefault();
             
-            // UI State: Disable button to prevent double submission
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Submitting...";
-            
-            const formData = {
-                full_name: document.getElementById('full_name').value || null,
-                total_correct: parseInt(document.getElementById('total_correct').value),
-                category: document.getElementById('category').value,
-                is_woman: document.getElementById('is_woman').checked,
-                is_pstm: document.getElementById('is_pstm').checked,
-                is_exser: document.getElementById('is_exser').checked,
-                is_dw: document.getElementById('is_dw').checked,
-                is_vi_lv: document.getElementById('is_vi_lv').checked,
-                is_hi_hh: document.getElementById('is_hi_hh').checked,
-                is_ld_cp: document.getElementById('is_ld_cp').checked,
-                is_asd_md: document.getElementById('is_asd_md').checked
-            };
+            <div class="field">
+                <label>Total Correct Questions (0-200) *</label>
+                <input type="number" id="total_correct" required min="0" max="200" placeholder="e.g. 165">
+            </div>
 
-            try {
-                const { error } = await supabaseClient
-                    .from('candidate_scores')
-                    .insert([formData]);
+            <div class="field">
+                <label>Community *</label>
+                <select id="category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="GT">GT</option>
+                    <option value="BC">BC (OBCM)</option>
+                    <option value="BCM">BCM</option>
+                    <option value="MBC">MBC/DC</option>
+                    <option value="SC">SC</option>
+                    <option value="SCA">SC(A)</option>
+                    <option value="ST">ST</option>
+                </select>
+            </div>
 
-                if (error) throw error;
+            <div class="field">
+                <label>Reservations / Special Categories</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" id="is_woman"> Woman</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_pstm"> PSTM</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_dw"> Destitute Widow</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC</label>
+                    <label class="checkbox-item"><input type="checkbox" id="is_asd_md"> ASD / ID / MD</label>
+                </div>
+            </div>
 
-                alert("Successfully submitted!");
-                // Future: Redirect to rankings.html
-                // window.location.href = "rankings.html";
-                
-            } catch (err) {
-                console.error("Submission error:", err);
-                alert("Error: " + err.message);
-            } finally {
-                // UI State: Re-enable button
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Submit & See My Rank";
-            }
-        };
-    </script>
+            <button type="submit" id="submitBtn">Submit & See My Rank</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
