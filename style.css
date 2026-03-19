@@ -1,114 +1,83 @@
-/* --- UNIVERSAL THEME (Midnight Purple) --- */
-:root {
-    --dark-purple: #2e1065;
-    --mid-purple: #5b21b6;
-    --accent-purple: #7c3aed;
-    --purple-light: #f5f3ff;
-    --border-purple: #ddd6fe;
-    --text-muted: #6b7280;
-    --success-green: #059669;
-}
-
-body {
-    background-color: var(--purple-light);
-    color: var(--dark-purple);
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    margin: 0;
-    min-height: 100vh;
-}
-
-/* --- NAVIGATION --- */
-.top-nav {
-    display: flex;
-    justify-content: flex-end;
-    padding: 15px 5%;
-}
-
-.nav-btn {
-    background: var(--dark-purple);
-    color: white;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-
-.nav-btn:hover { background: var(--mid-purple); }
-
 /* --- SUBMISSION FORM UI --- */
 .main-content {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    margin-top: -40px; /* Pulls form up slightly for better centering */
 }
 
 .form-card {
     background: white;
     width: 100%;
     max-width: 420px;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(46, 16, 101, 0.1);
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(46, 16, 101, 0.15);
     border: 1px solid var(--border-purple);
 }
 
-.form-card h1 { text-align: center; margin: 0; font-size: 1.4rem; color: var(--dark-purple); }
-.form-card p { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; }
+.form-card h1 { text-align: center; margin: 0; font-size: 1.6rem; color: var(--dark-purple); }
+.form-card p { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin: 8px 0 25px 0; }
 
-.field { margin-bottom: 18px; }
+.field { margin-bottom: 20px; }
 .section-label { 
     display: block; 
     font-size: 0.75rem; 
     font-weight: 800; 
-    margin-bottom: 8px; 
+    margin-bottom: 12px; 
     color: var(--mid-purple);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 }
 
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1rem;
     box-sizing: border-box;
 }
 
-input:focus, select:focus {
-    outline: none;
-    border-color: var(--accent-purple);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-}
-
+/* --- THE CHECKBOX FIX --- */
 .check-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    column-gap: 20px;
+    row-gap: 15px;
     background: #faf5ff;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 20px;
+    border-radius: 12px;
     border: 1px solid var(--border-purple);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .check-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.8rem;
+    display: grid;
+    grid-template-columns: 20px 1fr; /* Fixed width for checkbox, rest for text */
+    align-items: center; /* Vertical center */
+    gap: 10px; /* Space between box and text */
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
+    line-height: 1.3;
 }
 
-.full-width { grid-column: span 2; }
+.check-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--mid-purple); /* Makes the checkmark purple */
+}
+
+.full-width { 
+    grid-column: span 2; 
+}
 
 .dotted-divider {
     grid-column: span 2;
-    border-top: 1.5px dotted var(--border-purple);
+    border-top: 2px dotted var(--border-purple);
     margin: 5px 0;
 }
 
@@ -116,87 +85,19 @@ button[type="submit"] {
     width: 100%;
     background: var(--dark-purple);
     color: white;
-    padding: 14px;
+    padding: 16px;
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
 }
 
-/* --- DASHBOARD UI --- */
-.db-header {
-    background: var(--dark-purple);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 12px;
-    margin: 10px 20px 20px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 12px;
-    padding: 0 20px;
-}
-
-.cat-card {
-    background: white;
-    border: 1px solid var(--border-purple);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    height: 80vh;
-}
-
-.cat-header { background: var(--dark-purple); padding: 12px; border-radius: 10px 10px 0 0; }
-.cat-name { color: white; font-weight: 800; font-size: 1rem; }
-
-.column-filter {
+button[type="submit"]:hover {
     background: var(--mid-purple);
-    border: 1px solid var(--accent-purple);
-    color: white;
-    font-size: 0.7rem;
-    padding: 4px;
-    border-radius: 4px;
-    margin-top: 8px;
-    width: 100%;
 }
 
-.score-list { flex-grow: 1; overflow-y: auto; }
-
-.score-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border-bottom: 1px solid #f3f4f6;
-    align-items: center;
-}
-
-.cand-name { font-size: 0.85rem; font-weight: 600; color: var(--dark-purple); }
-.cand-score { 
-    font-weight: 900; 
-    color: var(--success-green); 
-    background: #ecfdf5;
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-/* --- FOOTER --- */
-.footer-sig {
-    text-align: right;
-    padding: 20px 40px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--dark-purple);
-    opacity: 0.5;
-}
-
-@media (max-width: 600px) {
-    .category-grid { grid-template-columns: 1fr; }
-    .cat-card { height: 400px; }
-    .footer-sig { text-align: center; }
+button[type="submit"]:active {
+    transform: scale(0.98);
 }
