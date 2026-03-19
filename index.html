@@ -3,38 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group 2A Score Tracker</title>
+    <title>Submit Marks | Group 2A Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <nav class="top-nav">
-    <a href="dashboard.html" class="nav-link">View Current Submissions →</a>
+    <a href="dashboard.html" class="nav-btn">View Rankings →</a>
 </nav>
 
-<div class="container">
-    <section class="form-card">
+<div class="main-content">
+    <div class="form-card">
         <header>
             <h1>Group 2A 2026</h1>
-            <p>Predict your rank by contributing your marks</p>
+            <p>Score Submission Portal</p>
         </header>
 
         <form id="scoreForm">
             <div class="field">
-                <label>Name (Optional)</label>
-                <input type="text" id="full_name" placeholder="Anonymous">
-            </div>
-            
-            <div class="field">
-                <label>Total Correct Questions (Max 200) *</label>
-                <input type="number" id="total_correct" required min="0" max="200" placeholder="000">
+                <label>Nickname</label>
+                <input type="text" id="full_name" placeholder="Optional">
             </div>
 
             <div class="field">
-                <label>Community *</label>
+                <label>Total Correct Questions</label>
+                <input type="number" id="total_correct" required min="0" max="200" placeholder="Max 200">
+            </div>
+
+            <div class="field">
+                <label>Community</label>
                 <select id="category" required>
-                    <option value="" disabled selected>Select Category</option>
+                    <option value="" disabled selected>Select</option>
                     <option value="GT">GT</option>
                     <option value="BC">BC</option>
                     <option value="BCM">BCM</option>
@@ -45,34 +45,27 @@
                 </select>
             </div>
 
-            <div class="checkbox-container">
+            <label class="section-label">Reservations</label>
+            <div class="check-grid">
                 <label class="check-item"><input type="checkbox" id="is_woman"> Woman</label>
                 <label class="check-item"><input type="checkbox" id="is_pstm"> PSTM</label>
-                <label class="check-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
-                <label class="check-item"><input type="checkbox" id="is_dw"> Destitute Widow</label>
+                <label class="check-item"><input type="checkbox" id="is_exser"> Ex-Ser</label>
+                <label class="check-item"><input type="checkbox" id="is_dw"> Widow (DW)</label>
                 
                 <div class="dotted-divider"></div>
 
                 <label class="check-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
                 <label class="check-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_ld_cp"> 
-                    <span>LD / CP / LC / DF / AC / MuD</span>
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_asd_md"> 
-                    <span>ASD / ID / SLD / MI / MD</span>
-                </label>
+                <label class="check-item full-width"><input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC / MuD</label>
+                <label class="check-item full-width"><input type="checkbox" id="is_asd_md"> ASD / ID / SLD / MI / MD</label>
             </div>
 
-            <button type="submit" id="submitBtn">Submit Marks</button>
+            <button type="submit" id="submitBtn">Submit My Marks</button>
         </form>
-    </section>
+    </div>
 </div>
 
-<footer class="initiative-footer">
-    An Allwin-Sugitha Initiative
-</footer>
+<div class="footer-sig">An Allwin-Sugitha Initiative</div>
 
 <script src="script.js"></script>
 </body>
