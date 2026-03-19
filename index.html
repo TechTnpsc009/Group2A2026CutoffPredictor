@@ -3,92 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNPSC Group 2A Cutoff Predictor 2026</title>
+    <title>TNPSC Group 2A Tracker 2026</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="container">
+
+<div class="main-wrapper">
+    <section class="form-container">
         <header>
-            <h2>Group 2A Score Submission</h2>
-            <p class="subtitle">Enter your marks to see your community rank</p>
+            <h1>Group 2A Score Submission</h1>
+            <p>Enter your details to contribute to the cutoff prediction.</p>
         </header>
 
         <form id="scoreForm">
             <div class="field">
-                <label for="full_name">Name / Nickname (Optional)</label>
-                <input type="text" id="full_name" placeholder="e.g. TNPSC Aspirant">
+                <label>Name (Optional)</label>
+                <input type="text" id="full_name" placeholder="Nickname">
             </div>
             
             <div class="field">
-                <label for="total_correct">Total Correct Questions (Max 200) *</label>
-                <input type="number" id="total_correct" required min="0" max="200" placeholder="Enter number of correct answers">
+                <label>Total Correct Questions (Max 200) *</label>
+                <input type="number" id="total_correct" required min="0" max="200">
             </div>
 
             <div class="field">
-                <label for="category">Community *</label>
+                <label>Community *</label>
                 <select id="category" required>
-                    <option value="" disabled selected>Select your community</option>
-                    <option value="GT">GT (General Turn)</option>
-                    <option value="BC">BC (Other than BCM)</option>
-                    <option value="BCM">BCM (Muslim)</option>
-                    <option value="MBC">MBC / DC</option>
+                    <option value="GT">GT</option>
+                    <option value="BC">BC</option>
+                    <option value="BCM">BCM</option>
+                    <option value="MBC">MBC</option>
                     <option value="SC">SC</option>
-                    <option value="SCA">SC (Arunthathiyar)</option>
+                    <option value="SCA">SCA</option>
                     <option value="ST">ST</option>
                 </select>
             </div>
 
-            <div class="field">
-                <label>Reservations & Special Categories</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_woman"> 
-                        <span>Woman</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_pstm"> 
-                        <span>PSTM (Tamil Medium)</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_exser"> 
-                        <span>Ex-Serviceman</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_dw"> 
-                        <span>Destitute Widow (DW)</span>
-                    </label>
-                    
-                    <hr class="divider">
-                    <p class="small-label">Differently Abled (PwD) Clusters:</p>
+            <div class="checkbox-list">
+                <label class="check-item"><input type="checkbox" id="is_woman"> Woman</label>
+                <label class="check-item"><input type="checkbox" id="is_pstm"> PSTM</label>
+                <label class="check-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
+                <label class="check-item"><input type="checkbox" id="is_dw"> Destitute Widow</label>
+                
+                <div class="dotted-divider"></div>
 
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_vi_lv"> 
-                        <span>VI / LV (Visual)</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_hi_hh"> 
-                        <span>HI / HH (Hearing)</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_ld_cp"> 
-                        <span>LD / CP / LC / DF / AC / MuD</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_asd_md"> 
-                        <span>ASD / ID / SLD / MI / MD</span>
-                    </label>
-                </div>
+                <label class="check-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
+                <label class="check-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
+                <label class="check-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC / MuD</label>
+                <label class="check-item"><input type="checkbox" id="is_asd_md"> ASD / ID / SLD / MI / MD</label>
             </div>
 
-            <button type="submit" id="submitBtn">Submit & Calculate Rank</button>
+            <button type="submit" id="submitBtn">Submit My Marks</button>
         </form>
+    </section>
 
-        <footer>
-            <p>© 2026 TNPSC 2A Cutoff Tracker</p>
-        </footer>
-    </div>
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>Current Submissions</h2>
+            <p>Real-time data from all aspirants</p>
+        </div>
 
-    <script src="script.js"></script>
+        <div class="category-grid" id="categoryGrid">
+            </div>
+    </section>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
