@@ -1,9 +1,9 @@
 :root {
-    --primary-purple: #6d28d9;    /* Deep Royal Purple */
-    --dark-purple: #4c1d95;       /* Darker Purple for headers */
-    --light-bg: #f5f3ff;          /* Softest Purple Background */
+    --primary-purple: #6d28d9;    
+    --dark-purple: #4c1d95;       
+    --light-bg: #f5f3ff;          
     --border-purple: #ddd6fe;
-    --text-main: #1e1b4b;         /* Midnight Purple Text */
+    --text-main: #1e1b4b;         
     --success-green: #059669;
 }
 
@@ -14,7 +14,7 @@ body {
     margin: 0;
 }
 
-/* --- REUSABLE UI ELEMENTS --- */
+/* --- REUSABLE UI --- */
 .btn-primary {
     background: var(--primary-purple);
     color: white;
@@ -30,20 +30,23 @@ body {
     transition: 0.2s;
 }
 
-.btn-primary:hover { background: var(--dark-purple); }
+.btn-primary:hover { background: var(--dark-purple); box-shadow: 0 10px 15px rgba(109, 40, 217, 0.2); }
 
 .btn-outline {
-    background: transparent;
-    border: 1.5px solid var(--primary-purple);
+    background: white;
+    border: 2px solid var(--primary-purple);
     color: var(--primary-purple);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
     cursor: pointer;
     text-decoration: none;
+    transition: 0.2s;
 }
 
-/* --- INDEX.HTML (SUBMISSION FORM) --- */
+.btn-outline:hover { background: var(--primary-purple); color: white; }
+
+/* --- FORM CARD (INDEX) --- */
 .main-content { display: flex; justify-content: center; padding: 40px 20px; }
 .form-card {
     background: white;
@@ -55,12 +58,8 @@ body {
     border: 1px solid var(--border-purple);
 }
 
-.form-card h1 { color: var(--primary-purple); margin: 0 0 10px 0; text-align: center; }
-.form-card p { text-align: center; color: #6b7280; margin-bottom: 30px; }
-
 .field { margin-bottom: 20px; }
 label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; color: var(--primary-purple); }
-
 input, select {
     width: 100%;
     padding: 12px;
@@ -77,108 +76,64 @@ input, select {
     border: 1px solid var(--border-purple);
     margin-bottom: 25px;
 }
-
 .check-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; font-size: 0.9rem; font-weight: 600; }
-.check-item input { width: 18px; height: 18px; accent-color: var(--primary-purple); }
+.check-item input { width: 18px; height: 18px; accent-color: var(--primary-purple); cursor: pointer; }
 .dotted-divider { border-top: 2px dotted var(--border-purple); margin: 15px 0; }
 
-/* --- DASHBOARD.HTML (ACCORDION) --- */
-.db-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+/* --- DASHBOARD ELEMENTS --- */
+.db-container { max-width: 800px; margin: 0 auto; padding: 20px; min-height: 100vh; }
 .db-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
 .accordion-item {
     background: white;
-    border: 1px solid var(--border-purple);
+    border: 1.5px solid var(--border-purple);
     border-radius: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     overflow: hidden;
 }
 
 .accordion-header {
-    background: white;
-    padding: 15px 20px;
+    padding: 18px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    background: white;
     transition: 0.2s;
 }
 
-.accordion-header:hover { background: var(--light-bg); }
 .accordion-header.active { background: var(--primary-purple); color: white; }
+.accordion-header.active span { color: white !important; }
 
-.accordion-header .cat-name { font-weight: 800; font-size: 1.1rem; }
-.accordion-content { display: none; padding: 0 20px 20px 20px; }
+.accordion-content { display: none; padding: 20px; border-top: 1px solid var(--border-purple); }
 .accordion-content.open { display: block; }
+
+.filter-group {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.filter-label { font-size: 0.75rem; font-weight: 800; color: var(--primary-purple); text-transform: uppercase; }
 
 .score-row {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--light-bg);
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-.score-val { color: var(--success-green); font-weight: 800; }
+.score-val {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--success-green);
+    background: #f0fdf4;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid #dcfce7;
+}
 
 .footer-sig { text-align: right; padding: 30px; font-size: 0.8rem; font-weight: 700; color: var(--primary-purple); opacity: 0.7; }
-
-/* Add/Update this in style.css */
-.btn-outline {
-    background: white;
-    border: 2px solid var(--primary-purple);
-    color: var(--primary-purple);
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-
-.btn-outline:hover {
-    background: var(--primary-purple);
-    color: white;
-    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
-}
-
-/* --- MODERN FILTER DROPDOWN --- */
-.filter-group {
-    background: #fdfbff;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-purple);
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.filter-label {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--primary-purple);
-    text-transform: uppercase;
-}
-
-.smart-select {
-    width: 100%;
-    padding: 10px;
-    border: 1.5px solid var(--border-purple);
-    border-radius: 6px;
-    background: white;
-    font-size: 0.85rem;
-    color: var(--dark-text);
-    cursor: pointer;
-    outline: none;
-}
-
-.smart-select:focus {
-    border-color: var(--primary-purple);
-}
-
-.score-row small {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--muted-purple);
-    font-weight: 600;
-}
