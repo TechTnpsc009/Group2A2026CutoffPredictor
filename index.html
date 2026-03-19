@@ -3,54 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNPSC Group 2A Cutoff Predictor</title>
+    <title>TNPSC Group 2A Cutoff Predictor 2026</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <h2>Group 2A Score Submission</h2>
+        <header>
+            <h2>Group 2A Score Submission</h2>
+            <p class="subtitle">Enter your marks to see your community rank</p>
+        </header>
+
         <form id="scoreForm">
             <div class="field">
-                <label>Full Name (Optional)</label>
-                <input type="text" id="full_name" placeholder="Enter Nickname">
+                <label for="full_name">Name / Nickname (Optional)</label>
+                <input type="text" id="full_name" placeholder="e.g. TNPSC Aspirant">
             </div>
             
             <div class="field">
-                <label>Total Correct Questions (0-200) *</label>
-                <input type="number" id="total_correct" required min="0" max="200" placeholder="e.g. 165">
+                <label for="total_correct">Total Correct Questions (Max 200) *</label>
+                <input type="number" id="total_correct" required min="0" max="200" placeholder="Enter number of correct answers">
             </div>
 
             <div class="field">
-                <label>Community *</label>
+                <label for="category">Community *</label>
                 <select id="category" required>
-                    <option value="" disabled selected>Select Category</option>
-                    <option value="GT">GT</option>
-                    <option value="BC">BC (OBCM)</option>
-                    <option value="BCM">BCM</option>
-                    <option value="MBC">MBC/DC</option>
+                    <option value="" disabled selected>Select your community</option>
+                    <option value="GT">GT (General Turn)</option>
+                    <option value="BC">BC (Other than BCM)</option>
+                    <option value="BCM">BCM (Muslim)</option>
+                    <option value="MBC">MBC / DC</option>
                     <option value="SC">SC</option>
-                    <option value="SCA">SC(A)</option>
+                    <option value="SCA">SC (Arunthathiyar)</option>
                     <option value="ST">ST</option>
                 </select>
             </div>
 
             <div class="field">
-                <label>Reservations / Special Categories</label>
+                <label>Reservations & Special Categories</label>
                 <div class="checkbox-group">
-                    <label class="checkbox-item"><input type="checkbox" id="is_woman"> Woman</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_pstm"> PSTM</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_dw"> Destitute Widow</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC</label>
-                    <label class="checkbox-item"><input type="checkbox" id="is_asd_md"> ASD / ID / MD</label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_woman"> 
+                        <span>Woman</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_pstm"> 
+                        <span>PSTM (Tamil Medium)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_exser"> 
+                        <span>Ex-Serviceman</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_dw"> 
+                        <span>Destitute Widow (DW)</span>
+                    </label>
+                    
+                    <hr class="divider">
+                    <p class="small-label">Differently Abled (PwD) Clusters:</p>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_vi_lv"> 
+                        <span>VI / LV (Visual)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_hi_hh"> 
+                        <span>HI / HH (Hearing)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_ld_cp"> 
+                        <span>LD / CP / LC / DF / AC / MuD</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="is_asd_md"> 
+                        <span>ASD / ID / SLD / MI / MD</span>
+                    </label>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn">Submit & See My Rank</button>
+            <button type="submit" id="submitBtn">Submit & Calculate Rank</button>
         </form>
+
+        <footer>
+            <p>© 2026 TNPSC 2A Cutoff Tracker</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
