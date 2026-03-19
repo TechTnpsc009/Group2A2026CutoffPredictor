@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Group 2A Tracker</title>
+    <title>Rankings Dashboard | Group 2A Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -11,12 +11,12 @@
 
 <header class="db-header">
     <div>
-        <h1 style="margin:0; font-size:1.4rem;">Live Analysis Dashboard</h1>
-        <p style="margin:5px 0 0 0; font-size:0.8rem; color:var(--text-dim);">Real-time community rankings</p>
+        <h1 style="margin:0; font-size:1.5rem; color:var(--primary-purple);">Live Rankings</h1>
+        <p style="margin:5px 0 0 0; font-size:0.85rem; color:var(--muted-purple);">Real-time community-wise data</p>
     </div>
     <div style="display:flex; gap:10px;">
-        <button onclick="refreshData()" class="nav-btn" style="background:transparent; border:1px solid var(--primary-purple);">Refresh</button>
-        <a href="index.html" class="nav-btn">Add My Score</a>
+        <button onclick="refreshData()" class="nav-btn" style="background:var(--white); border:1.5px solid var(--primary-purple); color:var(--primary-purple); cursor:pointer;">Refresh</button>
+        <a href="index.html" class="nav-btn">+ Add Marks</a>
     </div>
 </header>
 
@@ -46,16 +46,16 @@
                 <div class="cat-header">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span class="cat-name">${comm}</span>
-                        <span id="count-${comm}" style="color:var(--text-dim); font-size:0.75rem;">0</span>
+                        <span id="count-${comm}" style="font-size:0.8rem; opacity:0.9;">0</span>
                     </div>
                     <select class="column-filter" onchange="renderList('${comm}', this.value)">
                         <option value="ALL">All entries</option>
-                        <option value="W">Women</option>
+                        <option value="W">Woman</option>
                         <option value="PSTM">PSTM</option>
                         <option value="W_PSTM">W + PSTM</option>
                     </select>
                 </div>
-                <div class="score-list" id="list-${comm}" style="flex-grow:1; overflow-y:auto;"></div>
+                <div id="list-${comm}" style="flex-grow:1; overflow-y:auto;"></div>
             `;
             grid.appendChild(card);
         });
@@ -73,10 +73,10 @@
         if (filterType === "W") filtered = filtered.filter(d => d.is_woman);
         if (filterType === "PSTM") filtered = filtered.filter(d => d.is_pstm);
         if (filterType === "W_PSTM") filtered = filtered.filter(d => d.is_woman && d.is_pstm);
-        countDisplay.innerText = filtered.length;
-        container.innerHTML = filtered.length === 0 ? `<p style="padding:20px; text-align:center; font-size:0.8rem; color:var(--text-dim);">No Data</p>` :
+        countDisplay.innerText = `${filtered.length} entries`;
+        container.innerHTML = filtered.length === 0 ? `<p style="padding:20px; text-align:center; font-size:0.8rem; color:var(--muted-purple);">No entries</p>` :
             filtered.map(d => `<div class="score-item">
-                <span style="font-size:0.85rem;">${d.full_name}</span>
+                <span style="font-size:0.9rem; font-weight:500;">${d.full_name}</span>
                 <span class="cand-score">${d.total_correct}</span>
             </div>`).join('');
     }
