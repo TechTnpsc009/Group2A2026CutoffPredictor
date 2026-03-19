@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rankings Dashboard | Group 2A Tracker</title>
+    <title>Rankings Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<header class="db-header">
-    <div>
-        <h1 style="margin:0; font-size:1.5rem; color:var(--primary-purple);">Live Rankings</h1>
-        <p style="margin:5px 0 0 0; font-size:0.85rem; color:var(--muted-purple);">Real-time community-wise data</p>
-    </div>
-    <div style="display:flex; gap:10px;">
-        <button onclick="refreshData()" class="nav-btn" style="background:var(--white); border:1.5px solid var(--primary-purple); color:var(--primary-purple); cursor:pointer;">Refresh</button>
-        <a href="index.html" class="nav-btn">+ Add Marks</a>
-    </div>
-</header>
+<div class="db-container">
+    <header class="db-header">
+        <h1 style="color:var(--primary-purple); margin:0;">Rankings</h1>
+        <div style="display:flex; gap:10px;">
+            <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.7rem;">Expand All</button>
+            <button onclick="toggleAll(false)" class="btn-outline" style="font-size:0.7rem;">Collapse All</button>
+        </div>
+    </header>
 
-<div class="category-grid" id="mainGrid"></div>
+    <div id="accordion-root"></div>
+    
+    <div style="margin-top:20px; text-align:center;">
+        <a href="index.html" class="btn-primary">← Add New Score</a>
+    </div>
+</div>
 
 <div class="footer-sig">An Allwin-Sugitha Initiative</div>
 
@@ -28,58 +31,43 @@
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
     const communities = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
-    let rawData = [];
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        setupGrid();
-        await refreshData();
-    });
+    async function loadDashboard() {
+        const { data, error } = await supabaseClient.from('candidate_scores').select('*').order('total_correct', { ascending: false });
+        if (error) return;
 
-    function setupGrid() {
-        const grid = document.getElementById('mainGrid');
-        communities.forEach(comm => {
-            const card = document.createElement('div');
-            card.className = 'cat-card';
-            card.innerHTML = `
-                <div class="cat-header">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
+        const root = document.getElementById('accordion-root');
+        root.innerHTML = communities.map(comm => {
+            const list = data.filter(d => d.category === comm);
+            return `
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
                         <span class="cat-name">${comm}</span>
-                        <span id="count-${comm}" style="font-size:0.8rem; opacity:0.9;">0</span>
+                        <span style="font-size:0.8rem; font-weight:700;">${list.length} Entries ▾</span>
                     </div>
-                    <select class="column-filter" onchange="renderList('${comm}', this.value)">
-                        <option value="ALL">All entries</option>
-                        <option value="W">Woman</option>
-                        <option value="PSTM">PSTM</option>
-                        <option value="W_PSTM">W + PSTM</option>
-                    </select>
+                    <div class="accordion-content">
+                        ${list.length === 0 ? '<p style="color:gray; font-size:0.8rem;">No data yet</p>' : 
+                            list.map(d => `<div class="score-row"><span>${d.full_name}</span><span class="score-val">${d.total_correct}</span></div>`).join('')}
+                    </div>
                 </div>
-                <div id="list-${comm}" style="flex-grow:1; overflow-y:auto;"></div>
             `;
-            grid.appendChild(card);
+        }).join('');
+    }
+
+    function toggleAccordion(header) {
+        header.classList.toggle('active');
+        header.nextElementSibling.classList.toggle('open');
+    }
+
+    function toggleAll(expand) {
+        document.querySelectorAll('.accordion-header').forEach(h => {
+            expand ? h.classList.add('active') : h.classList.remove('active');
+            expand ? h.nextElementSibling.classList.add('open') : h.nextElementSibling.classList.remove('open');
         });
     }
 
-    async function refreshData() {
-        const { data, error } = await supabaseClient.from('candidate_scores').select('*').order('total_correct', { ascending: false });
-        if (!error) { rawData = data; communities.forEach(comm => renderList(comm, "ALL")); }
-    }
-
-    function renderList(comm, filterType) {
-        const container = document.getElementById(`list-${comm}`);
-        const countDisplay = document.getElementById(`count-${comm}`);
-        let filtered = rawData.filter(d => d.category === comm);
-        if (filterType === "W") filtered = filtered.filter(d => d.is_woman);
-        if (filterType === "PSTM") filtered = filtered.filter(d => d.is_pstm);
-        if (filterType === "W_PSTM") filtered = filtered.filter(d => d.is_woman && d.is_pstm);
-        countDisplay.innerText = `${filtered.length} entries`;
-        container.innerHTML = filtered.length === 0 ? `<p style="padding:20px; text-align:center; font-size:0.8rem; color:var(--muted-purple);">No entries</p>` :
-            filtered.map(d => `<div class="score-item">
-                <span style="font-size:0.9rem; font-weight:500;">${d.full_name}</span>
-                <span class="cand-score">${d.total_correct}</span>
-            </div>`).join('');
-    }
+    loadDashboard();
 </script>
 </body>
 </html>
