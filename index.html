@@ -1,1 +1,90 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNPSC Group 2A Cutoff Predictor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+        .field { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; }
+        .checkbox-item { display: flex; align-items: center; gap: 5px; font-size: 0.9em; }
+        button { background: #2563eb; color: white; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 5px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h2>Group 2A Score Submission</h2>
+    <form id="scoreForm">
+        <div class="field">
+            <label>Full Name (Optional)</label>
+            <input type="text" id="full_name" placeholder="Enter Nickname">
+        </div>
+        
+        <div class="field">
+            <label>Total Correct Questions (Max 200) *</label>
+            <input type="number" id="total_correct" required min="0" max="200">
+        </div>
+
+        <div class="field">
+            <label>Community *</label>
+            <select id="category" required>
+                <option value="GT">GT</option>
+                <option value="BC">BC</option>
+                <option value="BCM">BCM</option>
+                <option value="MBC">MBC/DC</option>
+                <option value="SC">SC</option>
+                <option value="SCA">SC(A)</option>
+                <option value="ST">ST</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Special Categories</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item"><input type="checkbox" id="is_woman"> Woman</div>
+                <div class="checkbox-item"><input type="checkbox" id="is_pstm"> PSTM</div>
+                <div class="checkbox-item"><input type="checkbox" id="is_exser"> Ex-Ser</div>
+                <div class="checkbox-item"><input type="checkbox" id="is_vi_lv"> VI/LV</div>
+                <div class="checkbox-item"><input type="checkbox" id="is_hi_hh"> HI/HH</div>
+            </div>
+        </div>
+
+        <button type="submit">Submit & See My Rank</button>
+    </form>
+
+    <script>
+        // REPLACE THESE with your actual Supabase details
+        const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
+        const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
+        const supabase = supabase.createClient(SB_URL, SB_KEY);
+
+        document.getElementById('scoreForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                full_name: document.getElementById('full_name').value || null,
+                total_correct: parseInt(document.getElementById('total_correct').value),
+                category: document.getElementById('category').value,
+                is_woman: document.getElementById('is_woman').checked,
+                is_pstm: document.getElementById('is_pstm').checked,
+                is_exser: document.getElementById('is_exser').checked,
+                is_vi_lv: document.getElementById('is_vi_lv').checked,
+                is_hi_hh: document.getElementById('is_hi_hh').checked
+            };
+
+            const { error } = await supabase.from('candidate_scores').insert([formData]);
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Success! Now redirecting to rankings...");
+                // window.location.href = "rankings.html"; // We will build this next!
+            }
+        };
+    </script>
+</body>
+</html>
