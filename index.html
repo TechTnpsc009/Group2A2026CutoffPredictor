@@ -3,33 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNPSC Group 2A Tracker 2026</title>
+    <title>Group 2A Score Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="main-wrapper">
-    <section class="form-container">
+<nav class="top-nav">
+    <a href="dashboard.html" class="nav-link">View Current Submissions →</a>
+</nav>
+
+<div class="container">
+    <section class="form-card">
         <header>
-            <h1>Group 2A Score Submission</h1>
-            <p>Enter your details to contribute to the cutoff prediction.</p>
+            <h1>Group 2A 2026</h1>
+            <p>Predict your rank by contributing your marks</p>
         </header>
 
         <form id="scoreForm">
             <div class="field">
                 <label>Name (Optional)</label>
-                <input type="text" id="full_name" placeholder="Nickname">
+                <input type="text" id="full_name" placeholder="Anonymous">
             </div>
             
             <div class="field">
                 <label>Total Correct Questions (Max 200) *</label>
-                <input type="number" id="total_correct" required min="0" max="200">
+                <input type="number" id="total_correct" required min="0" max="200" placeholder="000">
             </div>
 
             <div class="field">
                 <label>Community *</label>
                 <select id="category" required>
+                    <option value="" disabled selected>Select Category</option>
                     <option value="GT">GT</option>
                     <option value="BC">BC</option>
                     <option value="BCM">BCM</option>
@@ -40,7 +45,7 @@
                 </select>
             </div>
 
-            <div class="checkbox-list">
+            <div class="checkbox-container">
                 <label class="check-item"><input type="checkbox" id="is_woman"> Woman</label>
                 <label class="check-item"><input type="checkbox" id="is_pstm"> PSTM</label>
                 <label class="check-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
@@ -50,24 +55,24 @@
 
                 <label class="check-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
                 <label class="check-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
-                <label class="check-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC / MuD</label>
-                <label class="check-item"><input type="checkbox" id="is_asd_md"> ASD / ID / SLD / MI / MD</label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_ld_cp"> 
+                    <span>LD / CP / LC / DF / AC / MuD</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_asd_md"> 
+                    <span>ASD / ID / SLD / MI / MD</span>
+                </label>
             </div>
 
-            <button type="submit" id="submitBtn">Submit My Marks</button>
+            <button type="submit" id="submitBtn">Submit Marks</button>
         </form>
     </section>
-
-    <section class="dashboard-container">
-        <div class="dashboard-header">
-            <h2>Current Submissions</h2>
-            <p>Real-time data from all aspirants</p>
-        </div>
-
-        <div class="category-grid" id="categoryGrid">
-            </div>
-    </section>
 </div>
+
+<footer class="initiative-footer">
+    An Allwin-Sugitha Initiative
+</footer>
 
 <script src="script.js"></script>
 </body>
