@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rankings Dashboard</title>
+    <title>Rankings Dashboard | Group 2A Tracker</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -11,17 +11,27 @@
 
 <div class="db-container">
     <header class="db-header">
-        <h1 style="color:var(--primary-purple); margin:0;">Live Rankings</h1>
+        <div>
+            <h1 style="color:var(--primary-purple); margin:0; font-size:1.6rem;">Live Rankings</h1>
+            <p style="margin:5px 0 0 0; font-size:0.85rem; color:#6b7280;">Real-time communal rank analysis</p>
+        </div>
         <div style="display:flex; gap:10px;">
-            <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.7rem;">Expand All</button>
-            <button onclick="toggleAll(false)" class="btn-outline" style="font-size:0.7rem;">Collapse All</button>
+            <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.7rem; padding:6px 12px;">Expand All</button>
+            <button onclick="toggleAll(false)" class="btn-outline" style="font-size:0.7rem; padding:6px 12px;">Collapse All</button>
         </div>
     </header>
 
-    <div id="accordion-root"></div>
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="globalSearch" placeholder="Search by nickname..." onkeyup="handleSearch()" 
+               style="width:100%; padding:12px; border-radius:10px; border:1.5px solid var(--border-purple);">
+    </div>
+
+    <div id="accordion-root">
+        <p style="text-align:center; padding:40px; color:var(--primary-purple);">Loading community data...</p>
+    </div>
     
-    <div style="margin-top:30px; text-align:center;">
-        <a href="index.html" class="btn-primary" style="padding: 15px 40px;">Add your score</a>
+    <div style="margin-top:40px; text-align:center; padding-bottom: 40px;">
+        <a href="index.html" class="btn-primary" style="padding: 15px 50px; box-shadow: 0 10px 20px rgba(109, 40, 217, 0.2);">Add your score</a>
     </div>
 </div>
 
@@ -31,12 +41,20 @@
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
     const communities = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
     let allData = [];
 
     async function loadDashboard() {
-        const { data, error } = await supabaseClient.from('candidate_scores').select('*').order('total_correct', { ascending: false });
-        if (error) return;
+        const { data, error } = await supabaseClient
+            .from('candidate_scores')
+            .select('*')
+            .order('total_correct', { ascending: false });
+
+        if (error) {
+            console.error("Fetch error:", error);
+            return;
+        }
         allData = data;
         renderAccordions();
     }
@@ -48,15 +66,27 @@
             return `
                 <div class="accordion-item" id="item-${comm}">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span class="cat-name">${comm}</span>
-                        <span style="font-size:0.8rem; font-weight:700;">${list.length} Total Entries ▾</span>
+                        <div>
+                            <span class="cat-name">${comm}</span>
+                            <span style="font-size:0.75rem; color:#6b7280; margin-left:10px;">(${list.length} entries)</span>
+                        </div>
+                        <span class="arrow">▾</span>
                     </div>
                     <div class="accordion-content">
-                        <div style="margin-bottom:15px; display:flex; gap:8px; flex-wrap:wrap;">
-                            <button onclick="filterSub('${comm}', 'all')" class="sub-filter-btn">All ${comm}</button>
-                            <button onclick="filterSub('${comm}', 'w')" class="sub-filter-btn">${comm}_Women</button>
-                            <button onclick="filterSub('${comm}', 'pstm')" class="sub-filter-btn">${comm}_PSTM</button>
-                            <button onclick="filterSub('${comm}', 'w_pstm')" class="sub-filter-btn">${comm}_W_PSTM</button>
+                        <div class="filter-group">
+                            <label class="filter-label">Sub-Category Filter</label>
+                            <select class="smart-select" onchange="applyFilter('${comm}', this.value)">
+                                <option value="G"> (G) General - All</option>
+                                <option value="G_PSTM"> (G) (PSTM)</option>
+                                <option value="G_EXSER"> (G) (EX-SER)</option>
+                                <option value="G_EXSER_PSTM"> (G) (EX-SER) (PSTM)</option>
+                                <option value="W"> (W) Women Only</option>
+                                <option value="W_PSTM"> (W) (PSTM)</option>
+                                <option value="DW"> (DW) Destitute Widow</option>
+                                <option value="DW_PSTM"> (DW) (PSTM)</option>
+                                <option value="G_PwD"> (G) PwD (All Clusters)</option>
+                                <option value="W_PwD"> (W) PwD (All Clusters)</option>
+                            </select>
                         </div>
                         <div id="list-container-${comm}">
                             ${renderList(list)}
@@ -67,36 +97,97 @@
         }).join('');
     }
 
-    function renderList(list) {
-        if (list.length === 0) return '<p style="color:gray; font-size:0.8rem; padding:10px;">No data for this filter.</p>';
-        return list.map(d => `
-            <div class="score-row">
-                <span>${d.full_name} ${d.is_pstm ? '<small style="color:var(--primary-purple)">(PSTM)</small>' : ''}</span>
-                <span class="score-val">${d.total_correct}</span>
-            </div>
-        `).join('');
-    }
-
-    function filterSub(comm, type) {
-        event.stopPropagation(); // Prevents accordion from closing
+    function applyFilter(comm, type) {
         let filtered = allData.filter(d => d.category === comm);
-        
-        if (type === 'w') filtered = filtered.filter(d => d.is_woman);
-        if (type === 'pstm') filtered = filtered.filter(d => d.is_pstm);
-        if (type === 'w_pstm') filtered = filtered.filter(d => d.is_woman && d.is_pstm);
+
+        switch(type) {
+            case 'G_PSTM': filtered = filtered.filter(d => d.is_pstm); break;
+            case 'G_EXSER': filtered = filtered.filter(d => d.is_exser); break;
+            case 'G_EXSER_PSTM': filtered = filtered.filter(d => d.is_exser && d.is_pstm); break;
+            case 'W': filtered = filtered.filter(d => d.is_woman); break;
+            case 'W_PSTM': filtered = filtered.filter(d => d.is_woman && d.is_pstm); break;
+            case 'DW': filtered = filtered.filter(d => d.is_dw); break;
+            case 'DW_PSTM': filtered = filtered.filter(d => d.is_dw && d.is_pstm); break;
+            case 'G_PwD': filtered = filtered.filter(d => (d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md)); break;
+            case 'W_PwD': filtered = filtered.filter(d => d.is_woman && (d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md)); break;
+            default: break; // 'G'
+        }
 
         document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered);
     }
 
+    function renderList(list) {
+        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.85rem; padding:20px; text-align:center;">No entries match this filter.</p>';
+        
+        return list.map((d, index) => {
+            let tags = [];
+            if(d.is_woman) tags.push("W");
+            if(d.is_pstm) tags.push("PSTM");
+            if(d.is_exser) tags.push("EX-SER");
+            if(d.is_dw) tags.push("DW");
+            
+            // Highlight top 3
+            let badge = '';
+            if (index === 0) badge = '🥇 ';
+            if (index === 1) badge = '🥈 ';
+            if (index === 2) badge = '🥉 ';
+
+            return `
+                <div class="score-row">
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:700; font-size:0.95rem;">${badge}${d.full_name}</span>
+                        <span style="font-size:0.7rem; color:var(--muted-purple); font-weight:600; margin-top:2px;">
+                            ${tags.length > 0 ? tags.join(' • ') : 'General'}
+                        </span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="score-val">${d.total_correct}</span>
+                        <div style="font-size:0.6rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function handleSearch() {
+        const query = document.getElementById('globalSearch').value.toLowerCase();
+        if(!query) {
+            renderAccordions();
+            return;
+        }
+
+        document.querySelectorAll('.accordion-item').forEach(item => {
+            const content = item.innerText.toLowerCase();
+            if (content.includes(query)) {
+                item.style.display = 'block';
+                // Auto-expand items that match search
+                item.querySelector('.accordion-header').classList.add('active');
+                item.querySelector('.accordion-content').classList.add('open');
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
     function toggleAccordion(header) {
         header.classList.toggle('active');
-        header.nextElementSibling.classList.toggle('open');
+        const content = header.nextElementSibling;
+        content.classList.toggle('open');
+        header.querySelector('.arrow').innerText = content.classList.contains('open') ? '▴' : '▾';
     }
 
     function toggleAll(expand) {
         document.querySelectorAll('.accordion-header').forEach(h => {
-            expand ? h.classList.add('active') : h.classList.remove('active');
-            expand ? h.nextElementSibling.classList.add('open') : h.nextElementSibling.classList.remove('open');
+            const content = h.nextElementSibling;
+            if (expand) {
+                h.classList.add('active');
+                content.classList.add('open');
+                h.querySelector('.arrow').innerText = '▴';
+            } else {
+                h.classList.remove('active');
+                content.classList.remove('open');
+                h.querySelector('.arrow').innerText = '▾';
+            }
         });
     }
 
@@ -104,18 +195,62 @@
 </script>
 
 <style>
-    /* Sub-filter button styling added here to ensure dashboard looks great */
-    .sub-filter-btn {
-        background: #f3f0ff;
-        border: 1px solid var(--border-purple);
-        color: var(--primary-purple);
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        cursor: pointer;
+    /* Dashboard specific layout - already shared with style.css but kept for stability */
+    .db-container { max-width: 900px; margin: 0 auto; padding: 20px; min-height: 100vh; }
+    
+    .accordion-item {
+        background: white;
+        border: 1.5px solid var(--border-purple);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(109, 40, 217, 0.05);
     }
-    .sub-filter-btn:hover { background: var(--primary-purple); color: white; }
+
+    .accordion-header {
+        padding: 18px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        background: white;
+        color: var(--dark-text);
+        transition: 0.2s;
+    }
+
+    .accordion-header:hover { background: #faf5ff; }
+    .accordion-header.active { background: var(--primary-purple); color: white; }
+    .accordion-header.active span { color: white !important; }
+
+    .accordion-content { display: none; padding: 20px; border-top: 1px solid var(--border-purple); }
+    .accordion-content.open { display: block; }
+
+    .score-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1.5px solid #f3f4f6;
+    }
+
+    .score-row:last-child { border-bottom: none; }
+    
+    .score-val {
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: var(--success-green);
+        background: #ecfdf5;
+        padding: 4px 10px;
+        border-radius: 8px;
+    }
+
+    .smart-select {
+        margin-top: 5px;
+        border: 1.5px solid var(--border-purple);
+        background: #fdfbff;
+    }
+
+    .arrow { font-size: 1.2rem; font-weight: bold; }
 </style>
 </body>
 </html>
