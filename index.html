@@ -38,12 +38,12 @@
 
             <div class="field">
                 <label for="full_name">Nickname</label>
-                <input type="text" id="full_name" placeholder="Optional (e.g. Pradeep Kumar)" maxlength="20">
+                <input type="text" id="full_name" placeholder="Optional (e.g. Arjun)" maxlength="20">
             </div>
 
             <div class="field">
                 <label for="total_correct">Total Correct Questions (Max 200)</label>
-                <input type="number" id="total_correct" placeholder="" min="0" max="200" required>
+                <input type="number" id="total_correct" placeholder="000" min="0" max="200" required>
             </div>
 
             <div class="field">
@@ -93,13 +93,12 @@
 
             <button type="submit" id="submitBtn" class="btn-primary" style="width:100%;">Submit Marks</button>
             
-            <div id="statusMsg" style="margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; display: none;"></div>
+            <div id="statusMsg" style="margin-top: 15px; text-align: center; font-size: 1rem; font-weight: 900; display: none; line-height: 1.4;"></div>
         </form>
     </div>
 </div>
 
 <script>
-    // --- Configuration ---
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
@@ -121,7 +120,6 @@
         const nickName = document.getElementById('full_name').value.trim() || "Anonymous";
         const isTester = nickName.toLowerCase().startsWith('riya');
 
-        // Token logic: Lock device instead of Name/IP
         if (!isTester && localStorage.getItem('tnpsc_submitted_2026')) {
             showStatus("⚠️ This device has already submitted marks!", "#ef4444");
             return;
@@ -153,14 +151,14 @@
             const { error } = await supabaseClient.from('candidate_scores').insert([formData]);
             if (error) throw error;
 
-            // Set token for regular users
             if (!isTester) {
                 localStorage.setItem('tnpsc_submitted_2026', 'true');
             }
 
             let seconds = 3;
             const timer = setInterval(() => {
-                showStatus(`✅ Success! Redirecting in ${seconds}s...`, "#10b981");
+                // High contrast dark green and requested text
+                showStatus(`Success! Your score submitted successfully. Redirecting in ${seconds}s...`, "#065f46");
                 seconds--;
                 if (seconds < 0) {
                     clearInterval(timer);
