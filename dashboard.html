@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Faster 2-second blink animation */
+        /* 2-second heartbeat blink */
         @keyframes subtleBlink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
@@ -19,45 +19,27 @@
             display: inline-block;
         }
 
-        /* Fun Social Share Styles */
-        .share-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .share-label {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: #6b7280;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-        }
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        .icon-circle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .icon-circle:active {
-            transform: scale(0.9);
-        }
+        /* Modern Social Icons */
+        .share-container { margin-top: 20px; text-align: center; }
+        .share-label { font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase; margin-bottom: 12px; }
+        .social-icons { display: flex; justify-content: center; gap: 15px; }
+        .icon-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .icon-circle:active { transform: scale(0.9); }
         .whatsapp { background: #25D366; color: white; }
         .telegram { background: #0088cc; color: white; }
         .generic-share { background: #6366f1; color: white; }
-        
-        /* Font Icons via simple SVGs */
-        .social-icons svg { width: 22px; height: 22px; fill: currentColor; }
+        .social-icons svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* Modified Accordion for the "Peek" effect */
+        .cutoff-peek {
+            max-height: 180px; /* Limits the section to roughly 20% of mobile screens */
+            overflow-y: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        .cutoff-peek.full-open {
+            max-height: 1000px; /* Allows it to expand fully when clicked */
+            overflow-y: visible;
+        }
     </style>
 </head>
 <body>
@@ -78,13 +60,13 @@
         </div>
     </header>
 
-    <div class="accordion-item" style="margin: 25px 0; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <div class="accordion-header active" onclick="toggleAccordion(this)" style="background: #ffffff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-            <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.95rem; font-weight: 800;">Expected Cut-off Analysis</h4>
-            <span class="arrow" style="font-weight:bold; color: var(--primary-purple);">▴</span>
+    <div id="cutoff-wrapper" class="accordion-item cutoff-peek" style="margin: 20px 0; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); background: white;">
+        <div class="accordion-header" onclick="handleCutoffToggle(this)" style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.9rem; font-weight: 800;">Show Expected Cutoff</h4>
+            <span class="arrow" style="font-weight:bold; color: var(--primary-purple);">▾</span>
         </div>
         
-        <div class="accordion-content open" style="padding: 0 20px 20px 20px; background: white;">
+        <div style="padding: 0 20px 20px 20px;">
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-bottom: 15px;">
                     <thead>
@@ -97,27 +79,21 @@
                 </table>
             </div>
 
-            <p id="prediction-status" style="margin: 5px 0; font-size: 0.75rem; color: #ef4444; font-weight: 700; text-align: center;">
-                Waiting for 1000 submissions to calculate precision trends.
+            <p style="margin: 5px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700; text-align: center;">
+                Waiting for 1000 submissions for precision trends.
             </p>
             
-            <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 12px;">
+            <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 10px;">
                 <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
             </div>
-            <p id="data-goal" style="font-size: 0.6rem; color: #9ca3af; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Sample Progress: 0%</p>
+            <p id="data-goal" style="font-size: 0.55rem; color: #9ca3af; margin-top: 5px; font-weight: 600; text-align: center;">Sample Progress: 0%</p>
 
             <div class="share-container">
                 <div class="share-label">Invite others to increase accuracy</div>
                 <div class="social-icons">
-                    <button class="icon-circle whatsapp" onclick="socialShare('wa')" title="Share on WhatsApp">
-                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.432 5.631 1.433h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    </button>
-                    <button class="icon-circle telegram" onclick="socialShare('tg')" title="Share on Telegram">
-                        <svg viewBox="0 0 24 24"><path d="M11.944 0C5.347 0 0 5.347 0 11.944c0 6.597 5.347 11.944 11.944 11.944 6.596 0 11.944-5.347 11.944-11.944C23.888 5.347 18.54 0 11.944 0zm5.83 7.828l-1.972 9.308c-.148.663-.541.826-1.094.515l-3.004-2.212-1.45 1.394c-.16.16-.295.295-.605.295l.216-3.064 5.576-5.038c.242-.216-.053-.336-.374-.122L8.216 13.43l-2.973-.928c-.647-.202-.66-.647.135-.958l11.623-4.48c.538-.196 1.01.127.773.764z"/></svg>
-                    </button>
-                    <button class="icon-circle generic-share" onclick="socialShare('native')" title="More Share Options">
-                        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
-                    </button>
+                    <button class="icon-circle whatsapp" onclick="socialShare('wa')"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.432 5.631 1.433h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
+                    <button class="icon-circle telegram" onclick="socialShare('tg')"><svg viewBox="0 0 24 24"><path d="M11.944 0C5.347 0 0 5.347 0 11.944c0 6.597 5.347 11.944 11.944 11.944 6.596 0 11.944-5.347 11.944-11.944C23.888 5.347 18.54 0 11.944 0zm5.83 7.828l-1.972 9.308c-.148.663-.541.826-1.094.515l-3.004-2.212-1.45 1.394c-.16.16-.295.295-.605.295l.216-3.064 5.576-5.038c.242-.216-.053-.336-.374-.122L8.216 13.43l-2.973-.928c-.647-.202-.66-.647.135-.958l11.623-4.48c.538-.196 1.01.127.773.764z"/></svg></button>
+                    <button class="icon-circle generic-share" onclick="socialShare('native')"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg></button>
                 </div>
             </div>
         </div>
@@ -132,11 +108,7 @@
     </div>
 
     <div id="accordion-root">
-        <p style="text-align:center; padding:40px; color:var(--primary-purple);">Synchronizing with database...</p>
-    </div>
-    
-    <div style="margin-top:40px; text-align:center; padding-bottom: 60px;">
-        <a href="index.html" class="btn-primary" style="padding: 12px 40px; text-decoration: none; border-radius: 10px; font-weight: 800;">Add Your Score</a>
+        <p style="text-align:center; padding:40px; color:var(--primary-purple);">Synchronizing database...</p>
     </div>
 </div>
 
@@ -164,23 +136,22 @@
         renderCutoffTable();
     }
 
-    // Modern Social Sharing
+    function handleCutoffToggle(header) {
+        const wrapper = document.getElementById('cutoff-wrapper');
+        const arrow = header.querySelector('.arrow');
+        
+        wrapper.classList.toggle('full-open');
+        const isFull = wrapper.classList.contains('full-open');
+        arrow.innerText = isFull ? '▴' : '▾';
+        arrow.style.transform = isFull ? 'rotate(0deg)' : 'rotate(0deg)';
+    }
+
     function socialShare(platform) {
         const url = window.location.origin + '/index.html';
-        const text = "Check your TNPSC Group 2A rank and expected cut-off here! Help reach 1000+ entries for better accuracy: ";
-        
-        if (platform === 'wa') {
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + url)}`, '_blank');
-        } else if (platform === 'tg') {
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-        } else {
-            if (navigator.share) {
-                navigator.share({ title: 'TNPSC Rankings', text: text, url: url });
-            } else {
-                navigator.clipboard.writeText(url);
-                alert('Link copied to clipboard!');
-            }
-        }
+        const msg = "Check your TNPSC Group 2A rank and expected cutoff. Need 1000 entries for accuracy: " + url;
+        if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+        else if (platform === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`);
+        else navigator.share ? navigator.share({title:'TNPSC Rankings', url}) : (navigator.clipboard.writeText(url), alert('Copied!'));
     }
 
     function renderCutoffTable() {
@@ -195,12 +166,10 @@
 
     function updatePredictionStats(count) {
         const progressBar = document.getElementById('sync-progress');
-        const goalText = document.getElementById('data-goal');
         const target = 1000;
         const progressPercent = Math.min((count / target) * 100, 100).toFixed(0);
-        
         progressBar.style.width = progressPercent + "%";
-        goalText.innerText = `Sample Progress: ${progressPercent}% (${count}/${target})`;
+        document.getElementById('data-goal').innerText = `Sample Progress: ${progressPercent}% (${count}/${target})`;
     }
 
     function renderAccordions() {
@@ -208,80 +177,54 @@
         root.innerHTML = communities.map(comm => {
             const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
             const has = (key) => list.some(d => d[key]);
-
             return `
                 <div class="accordion-item" id="item-${comm}">
                     <div class="accordion-header" onclick="toggleAccordion(this)" style="${comm === 'OVERALL' ? 'border-left: 4px solid var(--primary-purple);' : ''}">
-                        <div>
-                            <span class="cat-name" style="font-weight:800;">${comm === 'OVERALL' ? 'STATE-WIDE OVERALL' : comm}</span>
-                            <span style="font-size:0.7rem; color:#9ca3af; margin-left:8px;">${list.length} Candidates</span>
-                        </div>
-                        <span class="arrow" style="font-weight:bold;">▾</span>
+                        <div><span style="font-weight:800;">${comm === 'OVERALL' ? 'STATE-WIDE OVERALL' : comm}</span><span style="font-size:0.7rem; color:#9ca3af; margin-left:8px;">${list.length} Candidates</span></div>
+                        <span class="arrow">▾</span>
                     </div>
                     <div class="accordion-content">
                         <div class="filter-group" style="padding: 10px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
-                            <label style="font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase;">Filter Sub-Category:</label>
-                            <select class="smart-select" onchange="applyFilter('${comm}', this.value)" style="width: 100%; margin-top: 5px; padding: 6px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.85rem;">
-                                <option value="G">All Candidates</option>
-                                ${has('is_pstm') ? '<option value="G_PSTM">General PSTM</option>' : ''}
-                                ${has('is_exser') ? '<option value="G_EXSER">Ex-Serviceman</option>' : ''}
-                                ${has('is_woman') ? '<option value="W">Women Only</option>' : ''}
-                                ${has('is_woman') && has('is_pstm') ? '<option value="W_PSTM">Women PSTM</option>' : ''}
-                                ${has('is_dw') ? '<option value="DW">Destitute Widow</option>' : ''}
-                                ${has('is_vi_lv') ? '<option value="VI_LV">PWD - Visual</option>' : ''}
-                                ${has('is_hi_hh') ? '<option value="HI_HH">PWD - Hearing</option>' : ''}
-                                ${has('is_ld_cp') ? '<option value="LD_CP">PWD - Locomotor</option>' : ''}
-                                ${has('is_asd_md') ? '<option value="ASD_MD">PWD - Intellectual/Multiple</option>' : ''}
+                            <select onchange="applyFilter('${comm}', this.value)" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.8rem;">
+                                <option value="G">All Categories</option>
+                                ${has('is_pstm') ? '<option value="PSTM">PSTM</option>' : ''}
+                                ${has('is_woman') ? '<option value="W">Women</option>' : ''}
+                                ${has('is_exser') ? '<option value="EX">Ex-Serviceman</option>' : ''}
                             </select>
                         </div>
                         <div id="list-container-${comm}">${renderList(list, comm === 'OVERALL')}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }).join('');
     }
 
     function applyFilter(comm, type) {
         let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
-        switch(type) {
-            case 'G_PSTM': filtered = filtered.filter(d => d.is_pstm); break;
-            case 'G_EXSER': filtered = filtered.filter(d => d.is_exser); break;
-            case 'W': filtered = filtered.filter(d => d.is_woman); break;
-            case 'W_PSTM': filtered = filtered.filter(d => d.is_woman && d.is_pstm); break;
-            case 'DW': filtered = filtered.filter(d => d.is_dw); break;
-            case 'VI_LV': filtered = filtered.filter(d => d.is_vi_lv); break;
-            case 'HI_HH': filtered = filtered.filter(d => d.is_hi_hh); break;
-            case 'LD_CP': filtered = filtered.filter(d => d.is_ld_cp); break;
-            case 'ASD_MD': filtered = filtered.filter(d => d.is_asd_md); break;
-        }
+        if(type === 'PSTM') filtered = filtered.filter(d => d.is_pstm);
+        if(type === 'W') filtered = filtered.filter(d => d.is_woman);
+        if(type === 'EX') filtered = filtered.filter(d => d.is_exser);
         document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered, comm === 'OVERALL');
     }
 
-    function renderList(list, showCommunityTag = false) {
-        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.8rem; padding:20px; text-align:center;">No candidates found.</p>';
+    function renderList(list, showCommunityTag) {
+        if (!list.length) return '<p style="padding:20px; text-align:center; color:#9ca3af; font-size:0.8rem;">No data found.</p>';
         return list.map((d, index) => {
             let tags = [];
             if(showCommunityTag) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
-            if(d.is_exser) tags.push("EXSER");
-            if(d.is_dw) tags.push("DW");
-            if(d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md) tags.push("PwD");
-            
             let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
-
             return `
-                <div class="score-row" style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb;">
+                <div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb;">
                     <div>
-                        <span style="font-weight:700; color: #374151;">${medal}${d.full_name}</span>
-                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform:uppercase;">${tags.join(' • ')}</span>
+                        <span style="font-weight:700;">${medal}${d.full_name}</span>
+                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800;">${tags.join(' • ')}</span>
                     </div>
                     <div style="text-align:right;">
-                        <span class="score-val" style="font-weight: 800; color: var(--primary-purple); font-size: 1.05rem;">${d.total_correct}</span>
-                        <div style="font-size:0.55rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
+                        <span style="font-weight: 800; color: var(--primary-purple); font-size: 1rem;">${d.total_correct}</span>
+                        <div style="font-size:0.5rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }).join('');
     }
 
@@ -294,10 +237,12 @@
 
     function toggleAll(expand) {
         document.querySelectorAll('.accordion-header').forEach(h => {
-            const content = h.nextElementSibling;
-            h.classList.toggle('active', expand);
-            content.classList.toggle('open', expand);
-            h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
+            if (h.parentElement.id.startsWith('item-')) { // Only target communal ones
+                const content = h.nextElementSibling;
+                h.classList.toggle('active', expand);
+                content.classList.toggle('open', expand);
+                h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
+            }
         });
     }
 
