@@ -200,3 +200,10 @@ input, select {
     background: var(--primary-purple);
     color: white;
 }
+
+/* Responsive Logo adjustment */
+@media (max-width: 480px) {
+    .main-content { padding: 20px 15px; }
+    img[alt="TechTnpsc Logo"] { max-height: 65px; }
+    .initiative-tag { font-size: 0.55rem; padding: 3px 6px; }
+}
