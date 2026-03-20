@@ -143,7 +143,7 @@
     }
 
     function socialShare(platform) {
-        const url = window.location.origin + '/index.html';
+        const url = window.location.origin;
         const msg = "Check your TNPSC Group 2A rank and expected cutoff: " + url;
         if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
         else if (platform === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`);
