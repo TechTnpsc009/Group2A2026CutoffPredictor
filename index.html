@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Marks | Group 2A Tracker</title>
+    <title>TechTnpsc | Group 2A Cutoff Predictor</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -11,50 +11,75 @@
 
 <div class="main-content">
     <div class="form-card">
-        <div style="margin-bottom: 25px; text-align: center;">
-            <a href="dashboard.html" class="btn-outline" style="display: block; width: 100%; box-sizing: border-box; padding: 12px;">View current scores and ranks →</a>
+        <div class="initiative-tag">An Allwin-Sugitha Initiative</div>
+
+        <a href="dashboard.html" class="btn-outline-full">View current scores and ranks →</a>
+
+        <div class="or-divider">
+            <span>OR</span>
         </div>
 
-        <header>
-            <h1>Submit Your Mark</h1>
-            <p>Enter your details to see where you stand</p>
-        </header>
+        <h2 style="margin:0 0 10px 0; color:var(--text-main); font-size: 1.8rem;">Submit Your Mark</h2>
+        <p style="color:#6b7280; font-size:0.9rem; margin-bottom: 25px;">Enter your details to see where you stand</p>
 
         <form id="scoreForm">
-            <div class="field">
-                <label>Nickname</label>
-                <input type="text" id="full_name" placeholder="Optional">
+            <div style="display:none;">
+                <input type="text" id="hp_field" tabindex="-1" autocomplete="off">
             </div>
 
             <div class="field">
-                <label>Total Correct Questions (Max 200)</label>
-                <input type="number" id="total_correct" required min="0" max="200" placeholder="000">
+                <label for="full_name">Nickname</label>
+                <input type="text" id="full_name" placeholder="Optional (e.g. Arjun)" maxlength="20">
             </div>
 
             <div class="field">
-                <label>Community</label>
+                <label for="total_correct">Total Correct Questions (Max 200)</label>
+                <input type="number" id="total_correct" placeholder="000" min="0" max="200" required>
+            </div>
+
+            <div class="field">
+                <label for="category">Community</label>
                 <select id="category" required>
                     <option value="" disabled selected>Select Community</option>
-                    <option value="GT">GT</option>
-                    <option value="BC">BC</option>
-                    <option value="BCM">BCM</option>
-                    <option value="MBC">MBC</option>
+                    <option value="GT">GT (General Turn)</option>
+                    <option value="BC">BC (Other than Muslim)</option>
+                    <option value="BCM">BC (Muslim)</option>
+                    <option value="MBC">MBC / DNC</option>
                     <option value="SC">SC</option>
-                    <option value="SCA">SCA</option>
+                    <option value="SCA">SC (Arunthathiyar)</option>
                     <option value="ST">ST</option>
                 </select>
             </div>
 
             <div class="check-container">
-                <label class="check-item"><input type="checkbox" id="is_woman"> Woman</label>
-                <label class="check-item"><input type="checkbox" id="is_pstm"> PSTM</label>
-                <label class="check-item"><input type="checkbox" id="is_exser"> Ex-Serviceman</label>
-                <label class="check-item"><input type="checkbox" id="is_dw"> Destitute Widow (DW)</label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_woman"> Woman
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_pstm"> PSTM (Tamil Medium)
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_exser"> Ex-Serviceman
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_dw"> Destitute Widow (DW)
+                </label>
+                
                 <div class="dotted-divider"></div>
-                <label class="check-item"><input type="checkbox" id="is_vi_lv"> VI / LV</label>
-                <label class="check-item"><input type="checkbox" id="is_hi_hh"> HI / HH</label>
-                <label class="check-item"><input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC / MuD</label>
-                <label class="check-item"><input type="checkbox" id="is_asd_md"> ASD / ID / SLD / MI / MD</label>
+                <p style="font-size:0.7rem; font-weight:800; color:var(--primary-purple); margin-bottom:10px;">SPECIAL CATEGORY (PwD)</p>
+                
+                <label class="check-item">
+                    <input type="checkbox" id="is_vi_lv"> VI / LV (Visual)
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_hi_hh"> HI / HH (Hearing)
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_asd_md"> ASD / SLD / MI / MD
+                </label>
             </div>
 
             <button type="submit" id="submitBtn" class="btn-primary" style="width:100%;">Submit Marks</button>
@@ -62,7 +87,74 @@
     </div>
 </div>
 
-<div class="footer-sig">An Allwin-Sugitha Initiative</div>
-<script src="script.js"></script>
+<script>
+    // --- Configuration ---
+    const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
+    const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+    const scoreForm = document.getElementById('scoreForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    scoreForm.onsubmit = async (e) => {
+        e.preventDefault();
+
+        // 1. Bot Protection
+        if (document.getElementById('hp_field').value !== "") return;
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Checking security...";
+
+        try {
+            // 2. Capture IP for Anti-Spam
+            const ipRes = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipRes.json();
+            const userIp = ipData.ip;
+            const nickName = document.getElementById('full_name').value.trim() || "Anonymous";
+
+            // 3. Duplicate Check (IP or Name)
+            let query = supabaseClient.from('candidate_scores').select('id').eq('ip_address', userIp);
+            if (nickName !== "Anonymous") {
+                query = query.or(`ip_address.eq.${userIp},full_name.eq.${nickName}`);
+            }
+
+            const { data: existing } = await query;
+            if (existing && existing.length > 0) {
+                alert("⚠️ You have already submitted your marks!");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Marks";
+                return;
+            }
+
+            // 4. Submit Data
+            const formData = {
+                full_name: nickName,
+                total_correct: parseInt(document.getElementById('total_correct').value),
+                category: document.getElementById('category').value,
+                is_woman: document.getElementById('is_woman').checked,
+                is_pstm: document.getElementById('is_pstm').checked,
+                is_exser: document.getElementById('is_exser').checked,
+                is_dw: document.getElementById('is_dw').checked,
+                is_vi_lv: document.getElementById('is_vi_lv').checked,
+                is_hi_hh: document.getElementById('is_hi_hh').checked,
+                is_ld_cp: document.getElementById('is_ld_cp').checked,
+                is_asd_md: document.getElementById('is_asd_md').checked,
+                ip_address: userIp
+            };
+
+            const { error } = await supabaseClient.from('candidate_scores').insert([formData]);
+            if (error) throw error;
+
+            alert("Success! Check your rank now.");
+            window.location.href = "dashboard.html";
+
+        } catch (err) {
+            alert("Error: " + err.message);
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit Marks";
+        }
+    };
+</script>
+
 </body>
 </html>
