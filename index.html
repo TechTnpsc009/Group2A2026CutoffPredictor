@@ -3,113 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rankings Dashboard | TechTnpsc</title>
+    <title>TechTnpsc | Group 2A Cutoff Predictor</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="db-container" style="position: relative;">
-    <div class="initiative-tag" style="position: absolute; top: 15px; right: 20px; font-size: 0.6rem; font-weight: 800; color: var(--primary-purple); background: #f5f3ff; padding: 4px 8px; border-radius: 5px; text-transform: uppercase;">
-        An Allwin-Sugitha Initiative
+<div class="main-content">
+    <div class="form-card">
+        <div class="initiative-tag">An Allwin-Sugitha Initiative</div>
+
+        <div style="text-align: center; margin-bottom: 25px;">
+            <img src="images/techtnpsclogo.PNG" alt="TechTnpsc Logo" style="max-height: 70px; width: auto; margin-bottom: 10px;">
+            
+            <h3 style="color: var(--primary-purple); font-weight: 800; letter-spacing: 1px; margin: 0 0 5px 0; font-size: 1.2rem;">
+                TNPSC GROUP 2A MAINS 2026
+            </h3>
+            <div style="width: 40px; height: 3px; background: var(--primary-purple); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+
+        <a href="dashboard.html" class="btn-outline-full">View current scores and ranks →</a>
+
+        <div class="or-divider">
+            <span>OR</span>
+        </div>
+
+        <h2 style="margin:0 0 5px 0; color:var(--text-main); font-size: 1.6rem;">Submit Your Mark</h2>
+        <p style="color:#6b7280; font-size:0.85rem; margin-bottom: 25px;">Enter your details to see where you stand</p>
+
+        <form id="scoreForm">
+            <div style="display:none;">
+                <input type="text" id="hp_field" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="field">
+                <label for="full_name">Nickname</label>
+                <input type="text" id="full_name" placeholder="Optional (e.g. Arjun)" maxlength="20">
+            </div>
+
+            <div class="field">
+                <label for="total_correct">Total Correct Questions (Max 200)</label>
+                <input type="number" id="total_correct" placeholder="000" min="0" max="200" required>
+            </div>
+
+            <div class="field">
+                <label for="category">Community</label>
+                <select id="category" required>
+                    <option value="" disabled selected>Select Community</option>
+                    <option value="GT">GT (General Turn)</option>
+                    <option value="BC">BC (Other than Muslim)</option>
+                    <option value="BCM">BC (Muslim)</option>
+                    <option value="MBC">MBC / DNC</option>
+                    <option value="SC">SC</option>
+                    <option value="SCA">SC (Arunthathiyar)</option>
+                    <option value="ST">ST</option>
+                </select>
+            </div>
+
+            <div class="check-container">
+                <label class="check-item">
+                    <input type="checkbox" id="is_woman"> Woman
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_pstm"> PSTM (Tamil Medium)
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_exser"> Ex-Serviceman
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_dw"> Destitute Widow (DW)
+                </label>
+                
+                <div class="dotted-divider"></div>
+                <p style="font-size:0.7rem; font-weight:800; color:var(--primary-purple); margin-bottom:10px;">SPECIAL CATEGORY (PwD)</p>
+                
+                <label class="check-item">
+                    <input type="checkbox" id="is_vi_lv"> VI / LV (Visual)
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_hi_hh"> HI / HH (Hearing)
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC
+                </label>
+                <label class="check-item">
+                    <input type="checkbox" id="is_asd_md"> ASD / SLD / MI / MD
+                </label>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-primary" style="width:100%;">Submit Marks</button>
+        </form>
     </div>
-
-    <header class="db-header" style="margin-top: 20px; text-align: center;">
-        <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 60px; width: auto; margin-bottom: 10px;">
-        <h1 style="color:var(--primary-purple); margin:0; font-size:1.4rem;">TNPSC Group 2A Mains 2026</h1>
-        <p style="margin:5px 0 0 0; font-size:0.85rem; color:#6b7280;">Enter your marks to check your standing</p>
-    </header>
-
-    <form id="scoreForm" style="margin-top: 20px;">
-        <input type="text" id="hp_field" style="display:none" tabindex="-1" autocomplete="off">
-
-        <div class="input-group">
-            <label>Nickname / Name</label>
-            <input type="text" id="full_name" required>
-        </div>
-
-        <div class="input-group">
-            <label>Total Correct Answers</label>
-            <input type="number" id="total_correct" min="0" max="300" required>
-        </div>
-
-        <div class="input-group">
-            <label>Category</label>
-            <select id="category" required>
-                <option value="">-- Select --</option>
-                <option value="GT">GT</option>
-                <option value="BC">BC</option>
-                <option value="BCM">BCM</option>
-                <option value="MBC">MBC</option>
-                <option value="SC">SC</option>
-                <option value="SCA">SCA</option>
-                <option value="ST">ST</option>
-            </select>
-        </div>
-
-        <div class="checkbox-grid">
-            <label class="cb-container">Woman<input type="checkbox" id="is_woman"><span class="checkmark"></span></label>
-            <label class="cb-container">PSTM<input type="checkbox" id="is_pstm"><span class="checkmark"></span></label>
-            <label class="cb-container">Ex-Ser<input type="checkbox" id="is_exser"><span class="checkmark"></span></label>
-            <label class="cb-container">DW<input type="checkbox" id="is_dw"><span class="checkmark"></span></label>
-        </div>
-
-        <div class="checkbox-grid" style="margin-top:10px;">
-            <label class="cb-container">VI/LV<input type="checkbox" id="is_vi_lv"><span class="checkmark"></span></label>
-            <label class="cb-container">HI/HH<input type="checkbox" id="is_hi_hh"><span class="checkmark"></span></label>
-            <label class="cb-container">LD/CP<input type="checkbox" id="is_ld_cp"><span class="checkmark"></span></label>
-            <label class="cb-container">ASD/MD<input type="checkbox" id="is_asd_md"><span class="checkmark"></span></label>
-        </div>
-
-        <button type="submit" id="submitBtn" class="btn-primary" style="width:100%; margin-top:20px;">Submit Score</button>
-        
-        <div id="statusMsg" style="margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; display: none;"></div>
-    </form>
 </div>
 
 <script>
+    // --- Configuration ---
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
     const scoreForm = document.getElementById('scoreForm');
     const submitBtn = document.getElementById('submitBtn');
-    const statusMsg = document.getElementById('statusMsg');
-
-    function showStatus(text, color) {
-        statusMsg.innerText = text;
-        statusMsg.style.color = color;
-        statusMsg.style.display = 'block';
-    }
 
     scoreForm.onsubmit = async (e) => {
         e.preventDefault();
         if (document.getElementById('hp_field').value !== "") return;
 
         submitBtn.disabled = true;
-        showStatus("Saving...", "var(--primary-purple)");
+        submitBtn.innerText = "Checking security...";
 
         try {
             const ipRes = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipRes.json();
             const userIp = ipData.ip;
-            const nickName = document.getElementById('full_name').value.trim();
+            const nickName = document.getElementById('full_name').value.trim() || "Anonymous";
 
-            // Bypass for testing
-            const isTester = nickName.toLowerCase().startsWith('riya');
+            let query = supabaseClient.from('candidate_scores').select('id').eq('ip_address', userIp);
+            if (nickName !== "Anonymous") {
+                query = query.or(`ip_address.eq.${userIp},full_name.eq.${nickName}`);
+            }
 
-            if (!isTester) {
-                const { data: existing } = await supabaseClient
-                    .from('candidate_scores')
-                    .select('id')
-                    .or(`ip_address.eq.${userIp},full_name.eq.${nickName}`)
-                    .limit(1);
-
-                if (existing && existing.length > 0) {
-                    showStatus("Already submitted!", "#ef4444");
-                    submitBtn.disabled = false;
-                    return;
-                }
+            const { data: existing } = await query;
+            if (existing && existing.length > 0) {
+                alert("⚠️ You have already submitted your marks!");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Marks";
+                return;
             }
 
             const formData = {
@@ -130,19 +149,13 @@
             const { error } = await supabaseClient.from('candidate_scores').insert([formData]);
             if (error) throw error;
 
-            let seconds = 3;
-            const timer = setInterval(() => {
-                showStatus(`Success! Redirecting in ${seconds}s...`, "#10b981");
-                seconds--;
-                if (seconds < 0) {
-                    clearInterval(timer);
-                    window.location.href = "dashboard.html";
-                }
-            }, 1000);
+            alert("Success! Check your rank now.");
+            window.location.href = "dashboard.html";
 
         } catch (err) {
-            showStatus("Error occurred", "#ef4444");
+            alert("Error: " + err.message);
             submitBtn.disabled = false;
+            submitBtn.innerText = "Submit Marks";
         }
     };
 </script>
