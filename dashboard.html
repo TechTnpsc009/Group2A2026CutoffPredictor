@@ -6,6 +6,18 @@
     <title>Rankings Dashboard | TechTnpsc</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Subtle 10-second blink animation */
+        @keyframes subtleBlink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.3; }
+        }
+        .blinking-dash {
+            animation: subtleBlink 10s infinite;
+            font-weight: 900;
+            color: #9ca3af;
+        }
+    </style>
 </head>
 <body>
 
@@ -73,7 +85,12 @@
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    const communities = ['OVERALL', 'GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
+    // GT at the bottom for Communal Breakdown
+    const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
+    
+    // GT at the top for Cut-off Table
+    const cutoffOrder = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
+    
     let allData = [];
 
     async function loadDashboard() {
@@ -93,13 +110,10 @@
 
     function renderCutoffTable() {
         const tableBody = document.getElementById('cutoff-table-body');
-        // Exclude 'OVERALL' from cut-off display
-        const displayComms = communities.filter(c => c !== 'OVERALL');
-        
-        tableBody.innerHTML = displayComms.map(comm => `
+        tableBody.innerHTML = cutoffOrder.map(comm => `
             <tr style="border-bottom: 1px solid #f3f4f6;">
                 <td style="padding: 8px; font-weight: 800; color: #374151;">${comm}</td>
-                <td style="padding: 8px; text-align: center; color: #9ca3af; font-style: italic;">TBA</td>
+                <td style="padding: 8px; text-align: center;"><span class="blinking-dash">—</span></td>
             </tr>
         `).join('');
     }
