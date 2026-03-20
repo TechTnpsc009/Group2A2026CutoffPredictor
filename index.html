@@ -37,13 +37,13 @@
             </div>
 
             <div class="field">
-                <label for="full_name">Nickname</label>
-                <input type="text" id="full_name" placeholder="Optional (e.g. Arjun)" maxlength="20">
+                <label for="full_name">Name</label>
+                <input type="text" id="full_name" placeholder="Optional (e.g. Pradeep Raj)" maxlength="20">
             </div>
 
             <div class="field">
                 <label for="total_correct">Total Correct Questions (Max 200)</label>
-                <input type="number" id="total_correct" placeholder="000" min="0" max="200" required>
+                <input type="number" id="total_correct" placeholder="" min="0" max="200" required>
             </div>
 
             <div class="field">
@@ -121,7 +121,7 @@
         const isTester = nickName.toLowerCase().startsWith('riya');
 
         if (!isTester && localStorage.getItem('tnpsc_submitted_2026')) {
-            showStatus("⚠️ This device has already submitted marks!", "#ef4444");
+            showStatus("⚠️ You have already submitted your marks!", "#ef4444");
             return;
         }
 
@@ -158,7 +158,7 @@
             let seconds = 3;
             const timer = setInterval(() => {
                 // High contrast dark green and requested text
-                showStatus(`Success! Your score submitted successfully. Redirecting in ${seconds}s...`, "#065f46");
+                showStatus(`Success! Your marks submitted successfully. Redirecting in ${seconds}s...`, "#065f46");
                 seconds--;
                 if (seconds < 0) {
                     clearInterval(timer);
