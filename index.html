@@ -10,17 +10,17 @@
 <body>
 
 <div class="main-content">
-    <img src="images/techtnpsclogo.png" alt="TechTnpsc Logo" style="max-height: 80px; width: auto; margin-bottom: 15px;">
-    
-    <div style="text-align: center; margin-bottom: 25px;">
-        <h3 style="color: var(--primary-purple); font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;">
-            TNPSC GROUP 2A MAINS 2026
-        </h3>
-        <div style="width: 50px; height: 3px; background: var(--primary-purple); margin: 0 auto; border-radius: 2px;"></div>
-    </div>
-    
     <div class="form-card">
         <div class="initiative-tag">An Allwin-Sugitha Initiative</div>
+
+        <div style="text-align: center; margin-bottom: 25px;">
+            <img src="images/techtnpsclogo.png" alt="TechTnpsc Logo" style="max-height: 70px; width: auto; margin-bottom: 10px;">
+            
+            <h3 style="color: var(--primary-purple); font-weight: 800; letter-spacing: 1px; margin: 0 0 5px 0; font-size: 1.2rem;">
+                TNPSC GROUP 2A MAINS 2026
+            </h3>
+            <div style="width: 40px; height: 3px; background: var(--primary-purple); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
 
         <a href="dashboard.html" class="btn-outline-full">View current scores and ranks →</a>
 
@@ -28,8 +28,8 @@
             <span>OR</span>
         </div>
 
-        <h2 style="margin:0 0 10px 0; color:var(--text-main); font-size: 1.8rem;">Submit Your Mark</h2>
-        <p style="color:#6b7280; font-size:0.9rem; margin-bottom: 25px;">Enter your details to see where you stand</p>
+        <h2 style="margin:0 0 5px 0; color:var(--text-main); font-size: 1.6rem;">Submit Your Mark</h2>
+        <p style="color:#6b7280; font-size:0.85rem; margin-bottom: 25px;">Enter your details to see where you stand</p>
 
         <form id="scoreForm">
             <div style="display:none;">
@@ -107,21 +107,17 @@
 
     scoreForm.onsubmit = async (e) => {
         e.preventDefault();
-
-        // 1. Bot Protection
         if (document.getElementById('hp_field').value !== "") return;
 
         submitBtn.disabled = true;
         submitBtn.innerText = "Checking security...";
 
         try {
-            // 2. Capture IP for Anti-Spam
             const ipRes = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipRes.json();
             const userIp = ipData.ip;
             const nickName = document.getElementById('full_name').value.trim() || "Anonymous";
 
-            // 3. Duplicate Check (IP or Name)
             let query = supabaseClient.from('candidate_scores').select('id').eq('ip_address', userIp);
             if (nickName !== "Anonymous") {
                 query = query.or(`ip_address.eq.${userIp},full_name.eq.${nickName}`);
@@ -135,7 +131,6 @@
                 return;
             }
 
-            // 4. Submit Data
             const formData = {
                 full_name: nickName,
                 total_correct: parseInt(document.getElementById('total_correct').value),
