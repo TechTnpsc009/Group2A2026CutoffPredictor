@@ -14,57 +14,42 @@
         An Allwin-Sugitha Initiative
     </div>
 
-    <header class="db-header" style="margin-top: 20px; text-align: center;">
-        <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 60px; width: auto; margin-bottom: 10px;">
-        <h1 style="color:var(--primary-purple); margin:0; font-size:1.4rem;">TNPSC Group 2A Mains 2026</h1>
-        <p style="margin:5px 0 0 0; font-size:0.85rem; color:#6b7280;">Enter your marks to check your standing</p>
+    <header class="db-header" style="margin-top: 20px;">
+        <div style="text-align: center; width: 100%;">
+            <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 60px; width: auto; margin-bottom: 10px;">
+            <h1 style="color:var(--primary-purple); margin:0; font-size:1.4rem;">TNPSC Group 2A Mains 2026</h1>
+            
+            <div id="total-badge" style="display: inline-block; background: var(--primary-purple); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-top: 10px;">
+                Total Submissions: --
+            </div>
+        </div>
     </header>
 
-    <form id="scoreForm" style="margin-top: 20px;">
-        <input type="text" id="hp_field" style="display:none" tabindex="-1" autocomplete="off">
-
-        <div class="input-group">
-            <label>Nickname / Name</label>
-            <input type="text" id="full_name" required>
-        </div>
-
-        <div class="input-group">
-            <label>Total Correct Answers</label>
-            <input type="number" id="total_correct" min="0" max="300" required>
-        </div>
-
-        <div class="input-group">
-            <label>Category</label>
-            <select id="category" required>
-                <option value="">-- Select --</option>
-                <option value="GT">GT</option>
-                <option value="BC">BC</option>
-                <option value="BCM">BCM</option>
-                <option value="MBC">MBC</option>
-                <option value="SC">SC</option>
-                <option value="SCA">SCA</option>
-                <option value="ST">ST</option>
-            </select>
-        </div>
-
-        <div class="checkbox-grid">
-            <label class="cb-container">Woman<input type="checkbox" id="is_woman"><span class="checkmark"></span></label>
-            <label class="cb-container">PSTM<input type="checkbox" id="is_pstm"><span class="checkmark"></span></label>
-            <label class="cb-container">Ex-Ser<input type="checkbox" id="is_exser"><span class="checkmark"></span></label>
-            <label class="cb-container">DW<input type="checkbox" id="is_dw"><span class="checkmark"></span></label>
-        </div>
-
-        <div class="checkbox-grid" style="margin-top:10px;">
-            <label class="cb-container">VI/LV<input type="checkbox" id="is_vi_lv"><span class="checkmark"></span></label>
-            <label class="cb-container">HI/HH<input type="checkbox" id="is_hi_hh"><span class="checkmark"></span></label>
-            <label class="cb-container">LD/CP<input type="checkbox" id="is_ld_cp"><span class="checkmark"></span></label>
-            <label class="cb-container">ASD/MD<input type="checkbox" id="is_asd_md"><span class="checkmark"></span></label>
-        </div>
-
-        <button type="submit" id="submitBtn" class="btn-primary" style="width:100%; margin-top:20px;">Submit Score</button>
+    <div class="prediction-box" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 25px 0; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.95rem; font-weight: 800;">Expected Cut-off Analysis</h4>
+        <p id="prediction-status" style="margin: 5px 0; font-size: 0.8rem; color: #6b7280;">Statistical precision requires a larger sample size.</p>
         
-        <div id="statusMsg" style="margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; display: none;"></div>
-    </form>
+        <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 12px;">
+            <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
+        </div>
+        <p id="data-goal" style="font-size: 0.65rem; color: #9ca3af; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Data Reliability: 0%</p>
+    </div>
+
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="font-size: 0.9rem; color: var(--text-main); margin:0; font-weight: 800;">COMMUNAL BREAKDOWN</h3>
+        <div style="display:flex; gap:8px;">
+            <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.6rem; padding:4px 8px;">Expand All</button>
+            <button onclick="toggleAll(false)" class="btn-outline" style="font-size:0.6rem; padding:4px 8px;">Collapse All</button>
+        </div>
+    </div>
+
+    <div id="accordion-root">
+        <p style="text-align:center; padding:40px; color:var(--primary-purple);">Synchronizing with database...</p>
+    </div>
+    
+    <div style="margin-top:40px; text-align:center; padding-bottom: 60px;">
+        <a href="index.html" class="btn-primary" style="padding: 12px 40px; text-decoration: none; border-radius: 10px; font-weight: 800;">Add Your Score</a>
+    </div>
 </div>
 
 <script>
@@ -72,76 +57,138 @@
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    const scoreForm = document.getElementById('scoreForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusMsg = document.getElementById('statusMsg');
+    const communities = ['BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
+    let allData = [];
 
-    function showStatus(text, color) {
-        statusMsg.innerText = text;
-        statusMsg.style.color = color;
-        statusMsg.style.display = 'block';
+    async function loadDashboard() {
+        const { data, error } = await supabaseClient
+            .from('candidate_scores')
+            .select('*')
+            .order('total_correct', { ascending: false });
+
+        if (error) return;
+        allData = data;
+        
+        document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
+        updatePredictionStats(data.length);
+        renderAccordions();
     }
 
-    scoreForm.onsubmit = async (e) => {
-        e.preventDefault();
-        if (document.getElementById('hp_field').value !== "") return;
-
-        const nickName = document.getElementById('full_name').value.trim();
-        const isTester = nickName.toLowerCase().startsWith('riya');
-
-        // TOKEN LOGIC: Check if this device already has a submission token
-        if (!isTester && localStorage.getItem('tnpsc_submitted_2026')) {
-            showStatus("This device has already submitted a score.", "#ef4444");
-            return;
+    function updatePredictionStats(count) {
+        const progressBar = document.getElementById('sync-progress');
+        const statusText = document.getElementById('prediction-status');
+        const goalText = document.getElementById('data-goal');
+        
+        const target = 500;
+        const progressPercent = Math.min((count / target) * 100, 100).toFixed(0);
+        progressBar.style.width = progressPercent + "%";
+        goalText.innerText = `Data Reliability: ${progressPercent}%`;
+        
+        if(count < target) {
+            statusText.innerText = `Waiting for ${target - count} more data points for trend calculation.`;
+        } else {
+            statusText.innerHTML = "<span style='color:#10b981; font-weight:800;'>Analysis in Progress: Trends being calculated based on current sample.</span>";
         }
+    }
 
-        submitBtn.disabled = true;
-        showStatus("Saving...", "var(--primary-purple)");
+    function renderAccordions() {
+        const root = document.getElementById('accordion-root');
+        root.innerHTML = communities.map(comm => {
+            const list = allData.filter(d => d.category === comm);
+            const has = (key) => list.some(d => d[key]);
 
-        try {
-            const ipRes = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipRes.json();
-            const userIp = ipData.ip;
+            return `
+                <div class="accordion-item" id="item-${comm}">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div>
+                            <span class="cat-name" style="font-weight:800;">${comm}</span>
+                            <span style="font-size:0.7rem; color:#9ca3af; margin-left:8px;">${list.length} Candidates</span>
+                        </div>
+                        <span class="arrow" style="font-weight:bold;">▾</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="filter-group" style="padding: 10px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
+                            <label style="font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase;">Apply Sub-Category Filter:</label>
+                            <select class="smart-select" onchange="applyFilter('${comm}', this.value)" style="width: 100%; margin-top: 5px; padding: 6px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.85rem;">
+                                <option value="G">All Candidates</option>
+                                ${has('is_pstm') ? '<option value="G_PSTM">General PSTM</option>' : ''}
+                                ${has('is_exser') ? '<option value="G_EXSER">Ex-Serviceman</option>' : ''}
+                                ${has('is_woman') ? '<option value="W">Women Only</option>' : ''}
+                                ${has('is_woman') && has('is_pstm') ? '<option value="W_PSTM">Women PSTM</option>' : ''}
+                                ${has('is_dw') ? '<option value="DW">Destitute Widow</option>' : ''}
+                                ${has('is_vi_lv') ? '<option value="VI_LV">PWD - Visual</option>' : ''}
+                                ${has('is_hi_hh') ? '<option value="HI_HH">PWD - Hearing</option>' : ''}
+                                ${has('is_ld_cp') ? '<option value="LD_CP">PWD - Locomotor</option>' : ''}
+                                ${has('is_asd_md') ? '<option value="ASD_MD">PWD - Intellectual/Multiple</option>' : ''}
+                            </select>
+                        </div>
+                        <div id="list-container-${comm}">${renderList(list)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
 
-            const formData = {
-                full_name: nickName,
-                total_correct: parseInt(document.getElementById('total_correct').value),
-                category: document.getElementById('category').value,
-                is_woman: document.getElementById('is_woman').checked,
-                is_pstm: document.getElementById('is_pstm').checked,
-                is_exser: document.getElementById('is_exser').checked,
-                is_dw: document.getElementById('is_dw').checked,
-                is_vi_lv: document.getElementById('is_vi_lv').checked,
-                is_hi_hh: document.getElementById('is_hi_hh').checked,
-                is_ld_cp: document.getElementById('is_ld_cp').checked,
-                is_asd_md: document.getElementById('is_asd_md').checked,
-                ip_address: userIp
-            };
-
-            const { error } = await supabaseClient.from('candidate_scores').insert([formData]);
-            if (error) throw error;
-
-            // TOKEN LOGIC: Set token on successful submission (unless tester)
-            if (!isTester) {
-                localStorage.setItem('tnpsc_submitted_2026', 'true');
-            }
-
-            let seconds = 3;
-            const timer = setInterval(() => {
-                showStatus(`Success! Redirecting in ${seconds}s...`, "#10b981");
-                seconds--;
-                if (seconds < 0) {
-                    clearInterval(timer);
-                    window.location.href = "dashboard.html";
-                }
-            }, 1000);
-
-        } catch (err) {
-            showStatus("Error occurred. Try again.", "#ef4444");
-            submitBtn.disabled = false;
+    function applyFilter(comm, type) {
+        let filtered = allData.filter(d => d.category === comm);
+        switch(type) {
+            case 'G_PSTM': filtered = filtered.filter(d => d.is_pstm); break;
+            case 'G_EXSER': filtered = filtered.filter(d => d.is_exser); break;
+            case 'W': filtered = filtered.filter(d => d.is_woman); break;
+            case 'W_PSTM': filtered = filtered.filter(d => d.is_woman && d.is_pstm); break;
+            case 'DW': filtered = filtered.filter(d => d.is_dw); break;
+            case 'VI_LV': filtered = filtered.filter(d => d.is_vi_lv); break;
+            case 'HI_HH': filtered = filtered.filter(d => d.is_hi_hh); break;
+            case 'LD_CP': filtered = filtered.filter(d => d.is_ld_cp); break;
+            case 'ASD_MD': filtered = filtered.filter(d => d.is_asd_md); break;
         }
-    };
+        document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered);
+    }
+
+    function renderList(list) {
+        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.8rem; padding:20px; text-align:center;">No candidates found for this selection.</p>';
+        return list.map((d, index) => {
+            let tags = [];
+            if(d.is_woman) tags.push("W");
+            if(d.is_pstm) tags.push("PSTM");
+            if(d.is_exser) tags.push("EXSER");
+            if(d.is_dw) tags.push("DW");
+            if(d.is_vi_lv || d.is_hi_hh || d.is_ld_cp || d.is_asd_md) tags.push("PwD");
+            
+            let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
+
+            return `
+                <div class="score-row" style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb;">
+                    <div>
+                        <span style="font-weight:700; color: #374151;">${medal}${d.full_name}</span>
+                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform:uppercase;">${tags.join(' • ') || 'OPEN CATEGORY'}</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="score-val" style="font-weight: 800; color: var(--primary-purple); font-size: 1.05rem;">${d.total_correct}</span>
+                        <div style="font-size:0.55rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleAccordion(header) {
+        header.classList.toggle('active');
+        const content = header.nextElementSibling;
+        content.classList.toggle('open');
+        header.querySelector('.arrow').innerText = content.classList.contains('open') ? '▴' : '▾';
+    }
+
+    function toggleAll(expand) {
+        document.querySelectorAll('.accordion-header').forEach(h => {
+            const content = h.nextElementSibling;
+            h.classList.toggle('active', expand);
+            content.classList.toggle('open', expand);
+            h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
+        });
+    }
+
+    loadDashboard();
 </script>
-
 </body>
 </html>
