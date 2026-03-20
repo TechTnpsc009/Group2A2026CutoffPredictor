@@ -25,14 +25,30 @@
         </div>
     </header>
 
-    <div class="prediction-box" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 25px 0; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.95rem; font-weight: 800;">Expected Cut-off Analysis</h4>
-        <p id="prediction-status" style="margin: 5px 0; font-size: 0.8rem; color: #6b7280;">Statistical precision requires a larger sample size.</p>
+    <div class="prediction-box" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 25px 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <h4 style="margin: 0 0 10px 0; color: var(--primary-purple); font-size: 0.95rem; font-weight: 800; text-align: center;">Expected Cut-off Analysis</h4>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-bottom: 15px;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 8px; text-align: left; color: #6b7280;">CATEGORY</th>
+                        <th style="padding: 8px; text-align: center; color: #6b7280;">PREDICTED CUT-OFF</th>
+                    </tr>
+                </thead>
+                <tbody id="cutoff-table-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <p id="prediction-status" style="margin: 5px 0; font-size: 0.75rem; color: #ef4444; font-weight: 700; text-align: center;">
+            Waiting for 1000 submissions to calculate precision trends.
+        </p>
         
         <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 12px;">
             <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
         </div>
-        <p id="data-goal" style="font-size: 0.65rem; color: #9ca3af; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Data Reliability: 0%</p>
+        <p id="data-goal" style="font-size: 0.6rem; color: #9ca3af; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Sample Progress: 0%</p>
     </div>
 
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -57,8 +73,7 @@
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    // Added 'OVERALL' to the start of the array
-    const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
+    const communities = ['OVERALL', 'GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
     let allData = [];
 
     async function loadDashboard() {
@@ -73,29 +88,35 @@
         document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
         updatePredictionStats(data.length);
         renderAccordions();
+        renderCutoffTable();
+    }
+
+    function renderCutoffTable() {
+        const tableBody = document.getElementById('cutoff-table-body');
+        // Exclude 'OVERALL' from cut-off display
+        const displayComms = communities.filter(c => c !== 'OVERALL');
+        
+        tableBody.innerHTML = displayComms.map(comm => `
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+                <td style="padding: 8px; font-weight: 800; color: #374151;">${comm}</td>
+                <td style="padding: 8px; text-align: center; color: #9ca3af; font-style: italic;">TBA</td>
+            </tr>
+        `).join('');
     }
 
     function updatePredictionStats(count) {
         const progressBar = document.getElementById('sync-progress');
-        const statusText = document.getElementById('prediction-status');
         const goalText = document.getElementById('data-goal');
-        
-        const target = 500;
+        const target = 1000;
         const progressPercent = Math.min((count / target) * 100, 100).toFixed(0);
-        progressBar.style.width = progressPercent + "%";
-        goalText.innerText = `Data Reliability: ${progressPercent}%`;
         
-        if(count < target) {
-            statusText.innerText = `Waiting for ${target - count} more data points for trend calculation.`;
-        } else {
-            statusText.innerHTML = "<span style='color:#10b981; font-weight:800;'>Analysis in Progress: Trends being calculated based on current sample.</span>";
-        }
+        progressBar.style.width = progressPercent + "%";
+        goalText.innerText = `Sample Progress: ${progressPercent}% (${count}/${target})`;
     }
 
     function renderAccordions() {
         const root = document.getElementById('accordion-root');
         root.innerHTML = communities.map(comm => {
-            // Logic to show all data for Overall, otherwise filter by community
             const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
             const has = (key) => list.some(d => d[key]);
 
@@ -110,7 +131,7 @@
                     </div>
                     <div class="accordion-content">
                         <div class="filter-group" style="padding: 10px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
-                            <label style="font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase;">Apply Sub-Category Filter:</label>
+                            <label style="font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase;">Filter Sub-Category:</label>
                             <select class="smart-select" onchange="applyFilter('${comm}', this.value)" style="width: 100%; margin-top: 5px; padding: 6px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.85rem;">
                                 <option value="G">All Candidates</option>
                                 ${has('is_pstm') ? '<option value="G_PSTM">General PSTM</option>' : ''}
@@ -148,10 +169,9 @@
     }
 
     function renderList(list, showCommunityTag = false) {
-        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.8rem; padding:20px; text-align:center;">No candidates found for this selection.</p>';
+        if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.8rem; padding:20px; text-align:center;">No candidates found.</p>';
         return list.map((d, index) => {
             let tags = [];
-            // Show the community (BC, MBC, etc.) in the sub-text if viewing the Overall list
             if(showCommunityTag) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
@@ -165,7 +185,7 @@
                 <div class="score-row" style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb;">
                     <div>
                         <span style="font-weight:700; color: #374151;">${medal}${d.full_name}</span>
-                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform:uppercase;">${tags.join(' • ') || 'OPEN CATEGORY'}</span>
+                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform:uppercase;">${tags.join(' • ')}</span>
                     </div>
                     <div style="text-align:right;">
                         <span class="score-val" style="font-weight: 800; color: var(--primary-purple); font-size: 1.05rem;">${d.total_correct}</span>
