@@ -57,8 +57,8 @@
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    // GT moved to the bottom of the list
-    const communities = ['BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
+    // Added 'OVERALL' to the start of the array
+    const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
     let allData = [];
 
     async function loadDashboard() {
@@ -95,14 +95,15 @@
     function renderAccordions() {
         const root = document.getElementById('accordion-root');
         root.innerHTML = communities.map(comm => {
-            const list = allData.filter(d => d.category === comm);
+            // Logic to show all data for Overall, otherwise filter by community
+            const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
             const has = (key) => list.some(d => d[key]);
 
             return `
                 <div class="accordion-item" id="item-${comm}">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-header" onclick="toggleAccordion(this)" style="${comm === 'OVERALL' ? 'border-left: 4px solid var(--primary-purple);' : ''}">
                         <div>
-                            <span class="cat-name" style="font-weight:800;">${comm}</span>
+                            <span class="cat-name" style="font-weight:800;">${comm === 'OVERALL' ? 'STATE-WIDE OVERALL' : comm}</span>
                             <span style="font-size:0.7rem; color:#9ca3af; margin-left:8px;">${list.length} Candidates</span>
                         </div>
                         <span class="arrow" style="font-weight:bold;">▾</span>
@@ -123,7 +124,7 @@
                                 ${has('is_asd_md') ? '<option value="ASD_MD">PWD - Intellectual/Multiple</option>' : ''}
                             </select>
                         </div>
-                        <div id="list-container-${comm}">${renderList(list)}</div>
+                        <div id="list-container-${comm}">${renderList(list, comm === 'OVERALL')}</div>
                     </div>
                 </div>
             `;
@@ -131,7 +132,7 @@
     }
 
     function applyFilter(comm, type) {
-        let filtered = allData.filter(d => d.category === comm);
+        let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
         switch(type) {
             case 'G_PSTM': filtered = filtered.filter(d => d.is_pstm); break;
             case 'G_EXSER': filtered = filtered.filter(d => d.is_exser); break;
@@ -143,13 +144,15 @@
             case 'LD_CP': filtered = filtered.filter(d => d.is_ld_cp); break;
             case 'ASD_MD': filtered = filtered.filter(d => d.is_asd_md); break;
         }
-        document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered);
+        document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered, comm === 'OVERALL');
     }
 
-    function renderList(list) {
+    function renderList(list, showCommunityTag = false) {
         if (list.length === 0) return '<p style="color:#9ca3af; font-size:0.8rem; padding:20px; text-align:center;">No candidates found for this selection.</p>';
         return list.map((d, index) => {
             let tags = [];
+            // Show the community (BC, MBC, etc.) in the sub-text if viewing the Overall list
+            if(showCommunityTag) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
             if(d.is_exser) tags.push("EXSER");
