@@ -7,15 +7,40 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Subtle 10-second blink animation */
+        /* Faster 2-second blink animation */
         @keyframes subtleBlink {
-            0%, 90%, 100% { opacity: 1; }
-            95% { opacity: 0.3; }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
         .blinking-dash {
-            animation: subtleBlink 10s infinite;
+            animation: subtleBlink 2s infinite;
             font-weight: 900;
             color: #9ca3af;
+            display: inline-block;
+        }
+
+        /* Share Button Styling */
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        .share-btn:active {
+            background: #1d4ed8;
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -49,7 +74,7 @@
                     </tr>
                 </thead>
                 <tbody id="cutoff-table-body">
-                    </tbody>
+                </tbody>
             </table>
         </div>
 
@@ -61,6 +86,10 @@
             <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
         </div>
         <p id="data-goal" style="font-size: 0.6rem; color: #9ca3af; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Sample Progress: 0%</p>
+
+        <button class="share-btn" onclick="shareDashboard()">
+            <span>📢 Help reach 1000 (Share with Friends)</span>
+        </button>
     </div>
 
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -85,12 +114,8 @@
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    // GT at the bottom for Communal Breakdown
     const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
-    
-    // GT at the top for Cut-off Table
     const cutoffOrder = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
-    
     let allData = [];
 
     async function loadDashboard() {
@@ -106,6 +131,27 @@
         updatePredictionStats(data.length);
         renderAccordions();
         renderCutoffTable();
+    }
+
+    // Share Functionality
+    async function shareDashboard() {
+        const shareData = {
+            title: 'TNPSC Group 2A Rankings',
+            text: 'Check your rank and expected cut-off for TNPSC Group 2A Mains 2026. Help reach 1000 data points for better accuracy!',
+            url: window.location.origin + '/index.html'
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback: Copy link
+                await navigator.clipboard.writeText(shareData.url);
+                alert('Link copied to clipboard! Share it with your friends.');
+            }
+        } catch (err) {
+            console.log('Share failed:', err);
+        }
     }
 
     function renderCutoffTable() {
