@@ -7,101 +7,74 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @keyframes subtleBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        :root { --primary-purple: #7c3aed; --text-main: #1f2937; }
+        
+        /* Chip Styles for Combined Filters */
+        .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6; align-items: center; }
+        .chip { 
+            font-size: 0.6rem; font-weight: 800; padding: 6px 10px; border-radius: 20px; 
+            border: 1px solid #e5e7eb; background: white; color: #6b7280; cursor: pointer; transition: all 0.2s;
+            text-transform: uppercase;
         }
-        .blinking-dash {
-            animation: subtleBlink 2s infinite;
-            font-weight: 900;
-            color: #9ca3af;
-            display: inline-block;
-        }
+        .chip.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2); }
+        .clear-link { font-size: 0.6rem; color: #ef4444; font-weight: 800; cursor: pointer; margin-left: auto; text-decoration: underline; }
 
-        .share-container { margin-top: 20px; text-align: center; }
-        .share-label { font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase; margin-bottom: 12px; }
-        .social-icons { display: flex; justify-content: center; gap: 15px; }
-        .icon-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .icon-circle:active { transform: scale(0.9); }
-        .whatsapp { background: #25D366; color: white; }
-        .telegram { background: #0088cc; color: white; }
-        .generic-share { background: #6366f1; color: white; }
-        .social-icons svg { width: 20px; height: 20px; fill: currentColor; }
-
-        /* Fix visibility when expanded */
-        .accordion-header.active h4, 
-        .accordion-header.active .arrow {
-            color: white !important;
-        }
+        /* Dashboard UI */
+        .db-container { max-width: 600px; margin: auto; font-family: sans-serif; padding: 10px; }
+        .accordion-item { margin-bottom: 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: white; overflow: hidden; }
+        .accordion-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .accordion-header.active { background: var(--primary-purple); color: white; }
+        .accordion-content { display: none; }
+        .accordion-content.open { display: block; border-top: 1px solid #f3f4f6; }
+        .candidate-row { display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb; align-items: center; }
+        
+        /* Telegram & CTA Styles */
+        .tg-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: #24A1DE; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.9rem; margin: 15px 0; }
+        .share-card { background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 12px; text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="db-container" style="position: relative; padding-bottom: 50px;">
-    <header class="db-header" style="margin-top: 20px;">
-        <div style="text-align: center; width: 100%;">
-            <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 60px; width: auto; margin-bottom: 10px;">
-            <h1 style="color:var(--primary-purple); margin:0; font-size:1.4rem; font-weight: 900;">TNPSC Group 2A Mains 2026</h1>
-            <div id="total-badge" style="display: inline-block; background: var(--primary-purple); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-top: 10px;">
-                Total Submissions: --
-            </div>
+<div class="db-container">
+    <header style="text-align: center; margin: 20px 0;">
+        <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 55px; margin-bottom: 8px;">
+        <h1 style="color:var(--primary-purple); margin:0; font-size:1.3rem; font-weight: 900;">Group 2A Mains 2026</h1>
+        <div id="total-badge" style="display: inline-block; background: #f5f3ff; color: var(--primary-purple); padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-top: 10px; border: 1px solid #ddd6fe;">
+            Submissions: --
         </div>
     </header>
 
-    <div class="accordion-item" style="margin: 20px 0; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); background: white; overflow: hidden;">
-        <div class="accordion-header" onclick="toggleAccordion(this)" style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-            <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.9rem; font-weight: 800;">Show Expected Cutoff</h4>
-            <span class="arrow" style="font-weight:bold; color: var(--primary-purple);">▾</span>
-        </div>
-        
-        <div class="accordion-content" style="padding: 0 20px 20px 20px;">
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 10px; margin-bottom: 15px;">
-                    <thead>
-                        <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
-                            <th style="padding: 8px; text-align: left; color: #6b7280;">CATEGORY</th>
-                            <th style="padding: 8px; text-align: center; color: #6b7280;">PREDICTED CUT-OFF</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cutoff-table-body"></tbody>
-                </table>
-            </div>
-            <p style="margin: 5px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700; text-align: center;">Waiting for 1000 submissions for precision trends.</p>
-            <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 10px;">
-                <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
-            </div>
-            <p id="data-goal" style="font-size: 0.55rem; color: #9ca3af; margin-top: 5px; font-weight: 600; text-align: center;">Sample Progress: 0%</p>
-        </div>
+    <a href="https://t.me/techt_npsc" class="tg-btn" target="_blank">
+        JOIN TELEGRAM CHANNEL FOR UPDATES
+    </a>
+
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+        <h4 style="margin:0 0 8px 0; color: #334155; font-size: 0.8rem; font-weight: 800;">EXPECTED CUTOFF ANALYSIS</h4>
+        <p style="margin:0; font-size: 0.7rem; color: #64748b; line-height: 1.4;">
+            Based on current data trends and paper difficulty, the safe score for <b>GT (General)</b> is estimated between <b>155-162</b>. Categories like <b>BCM</b> and <b>SCA</b> may see lower ranges. These are tentative and will update as more scores are added.
+        </p>
     </div>
 
-    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
-        <h3 style="font-size: 0.9rem; color: var(--text-main); margin:0; font-weight: 900; letter-spacing: 0.5px;">COMMUNAL BREAKDOWN</h3>
-        <div style="display:flex; gap:8px;">
-            <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.6rem; padding:4px 8px;">Expand All</button>
-            <button onclick="toggleAll(false)" class="btn-outline" style="font-size:0.6rem; padding:4px 8px;">Collapse All</button>
+    <div style="display:flex; justify-content: space-between; align-items: center; margin: 10px 5px;">
+        <h3 style="font-size: 0.85rem; color: var(--text-main); margin:0; font-weight: 900;">COMMUNAL RANKINGS</h3>
+        <div style="display:flex; gap:6px;">
+            <button onclick="toggleAll(true)" style="font-size:0.55rem; padding:5px 8px; font-weight:800; border:1px solid #ddd; background:white; border-radius:4px;">EXPAND</button>
+            <button onclick="toggleAll(false)" style="font-size:0.55rem; padding:5px 8px; font-weight:800; border:1px solid #ddd; background:white; border-radius:4px;">COLLAPSE</button>
         </div>
     </div>
 
     <div id="accordion-root">
-        <p style="text-align:center; padding:40px; color:var(--primary-purple); font-weight: 800;">Synchronizing database...</p>
+        <p style="text-align:center; padding:50px; color:#9ca3af; font-weight: 700;">Loading real-time rankings...</p>
     </div>
 
-    <div style="margin-top: 40px; text-align: center; border-top: 1px dashed #e5e7eb; padding-top: 30px;">
-        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background: none; border: none; color: #9ca3af; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-bottom: 25px;">↑ Back to top</button>
-        <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 15px; padding: 20px; margin-bottom: 20px;">
-            <p style="margin: 0 0 15px 0; font-size: 0.85rem; color: #5b21b6; font-weight: 800;">Add your performance to the list!</p>
-            <a href="index.html" class="btn-primary" style="display: block; padding: 15px; text-decoration: none; border-radius: 10px; font-weight: 900; font-size: 1rem; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);">SUBMIT YOUR SCORE</a>
-        </div>
-        
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; text-align: center;">
-            <p style="margin: 0 0 12px 0; font-size: 0.75rem; font-weight: 800; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px;">Get Instant Updates</p>
-            <a href="https://t.me/+jQ-3e_jl84cxOGE1" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #0088cc; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.2); width: 85%;">
-                <svg style="width:18px; height:18px; fill:currentColor;" viewBox="0 0 24 24"><path d="M11.944 0C5.347 0 0 5.347 0 11.944c0 6.597 5.347 11.944 11.944 11.944 6.596 0 11.944-5.347 11.944-11.944C23.888 5.347 18.54 0 11.944 0zm5.83 7.828l-1.972 9.308c-.148.663-.541.826-1.094.515l-3.004-2.212-1.45 1.394c-.16.16-.295.295-.605.295l.216-3.064 5.576-5.038c.242-.216-.053-.336-.374-.122L8.216 13.43l-2.973-.928c-.647-.202-.66-.647.135-.958l11.623-4.48c.538-.196 1.01.127.773.764z"/></svg>
-                JOIN TELEGRAM CHANNEL
-            </a>
-            <p style="margin-top: 10px; font-size: 0.6rem; color: #60a5fa; font-weight: 700;">Discussion & Cutoff Analysis</p>
-        </div>
+    <div class="share-card">
+        <p style="margin: 0 0 10px 0; font-size: 0.8rem; color: #92400e; font-weight: 800;">Help us make the data more accurate!</p>
+        <button onclick="copyShareLink()" style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 0.8rem;">SHARE WITH FRIENDS</button>
     </div>
+
+    <footer style="text-align:center; margin-top: 30px; padding-bottom: 20px;">
+        <p style="font-size: 0.65rem; color: #9ca3af; font-weight: 600;">© 2026 TechTnpsc - Allwin-Sugitha Initiative</p>
+    </footer>
 </div>
 
 <script>
@@ -109,9 +82,9 @@
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
-    const cutoffOrder = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
+    const communities = ['OVERALL', 'GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
     let allData = [];
+    let activeFilters = {}; 
 
     async function loadDashboard() {
         const { data, error } = await supabaseClient
@@ -119,137 +92,102 @@
             .select('*')
             .order('total_correct', { ascending: false });
 
-        if (error) {
-            document.getElementById('accordion-root').innerHTML = '<p style="color:red; text-align:center;">Failed to load data.</p>';
-            return;
-        }
+        if (error) return;
         allData = data;
-        document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
-        updatePredictionStats(data.length);
+        document.getElementById('total-badge').innerText = `Submissions: ${data.length}`;
         renderAccordions();
-        renderCutoffTable();
-    }
-
-    function toggleAccordion(header) {
-        header.classList.toggle('active');
-        const content = header.nextElementSibling;
-        content.classList.toggle('open');
-        header.querySelector('.arrow').innerText = content.classList.contains('open') ? '▴' : '▾';
-    }
-
-    function socialShare(platform) {
-        const url = window.location.origin;
-        const msg = "Check your TNPSC Group 2A rank and expected cutoff: " + url;
-        if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
-        else if (platform === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`);
-        else navigator.share ? navigator.share({title:'TNPSC Rankings', url}) : (navigator.clipboard.writeText(url), alert('Copied!'));
-    }
-
-    function renderCutoffTable() {
-        const tableBody = document.getElementById('cutoff-table-body');
-        tableBody.innerHTML = cutoffOrder.map(comm => `
-            <tr style="border-bottom: 1px solid #f3f4f6;">
-                <td style="padding: 8px; font-weight: 800; color: #374151;">${comm}</td>
-                <td style="padding: 8px; text-align: center;"><span class="blinking-dash">—</span></td>
-            </tr>
-        `).join('');
-    }
-
-    function updatePredictionStats(count) {
-        const progressBar = document.getElementById('sync-progress');
-        const target = 1000;
-        const progressPercent = Math.min((count / target) * 100, 100).toFixed(0);
-        progressBar.style.width = progressPercent + "%";
-        document.getElementById('data-goal').innerText = `Sample Progress: ${progressPercent}% (${count}/${target})`;
     }
 
     function renderAccordions() {
         const root = document.getElementById('accordion-root');
         root.innerHTML = communities.map(comm => {
             const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
+            activeFilters[comm] = []; 
             const has = (key) => list.some(d => d[key]);
             
             return `
-                <div class="accordion-item" id="item-${comm}">
-                    <div class="accordion-header" onclick="toggleAccordion(this)" style="${comm === 'OVERALL' ? 'border-left: 4px solid var(--primary-purple);' : ''}">
-                        <div><span style="font-weight:800;">${comm === 'OVERALL' ? 'STATE-WIDE OVERALL' : comm}</span><span style="font-size:0.7rem; color:#9ca3af; margin-left:8px;">${list.length} Candidates</span></div>
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <div style="font-weight:900; font-size:0.9rem;">${comm} <span style="font-weight:600; font-size:0.65rem; opacity:0.7;">(${list.length})</span></div>
                         <span class="arrow">▾</span>
                     </div>
                     <div class="accordion-content">
-                        <div class="filter-group" style="padding: 10px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6;">
-                            <select onchange="applyFilter('${comm}', this.value)" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.8rem; font-weight: 600;">
-                                <option value="G">All Categories (General)</option>
-                                ${has('is_woman') ? '<option value="W">Women Only</option>' : ''}
-                                ${has('is_pstm') ? '<option value="PSTM">PSTM Only</option>' : ''}
-                                ${has('is_exser') ? '<option value="EX">Ex-Servicemen</option>' : ''}
-                                ${has('is_dw') ? '<option value="DW">Destitute Widow (DW)</option>' : ''}
-                                ${has('is_vi_lv') ? '<option value="VI">PwD (VI/LV)</option>' : ''}
-                                ${has('is_hi_hh') ? '<option value="HI">PwD (HI/HH)</option>' : ''}
-                                ${has('is_ld_cp') ? '<option value="LD">PwD (LD/CP)</option>' : ''}
-                                ${has('is_asd_md') ? '<option value="ASD">PwD (ASD/MD)</option>' : ''}
-                            </select>
+                        <div class="filter-chips" id="chips-${comm}">
+                            ${has('is_woman') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_woman', this)">Woman</div>` : ''}
+                            ${has('is_pstm') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_pstm', this)">PSTM</div>` : ''}
+                            ${has('is_hi_hh') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_hi_hh', this)">HI/HH</div>` : ''}
+                            <div class="clear-link" id="clear-${comm}" style="display:none;" onclick="clearFilters('${comm}')">Reset</div>
                         </div>
-                        <div id="list-container-${comm}">${renderList(list, comm === 'OVERALL')}</div>
+                        <div id="list-${comm}">${renderList(list, comm === 'OVERALL')}</div>
                     </div>
                 </div>`;
         }).join('');
     }
 
-    function applyFilter(comm, type) {
-        let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
+    function toggleChip(comm, filterKey, element) {
+        element.classList.toggle('active');
+        activeFilters[comm].includes(filterKey) 
+            ? activeFilters[comm] = activeFilters[comm].filter(k => k !== filterKey) 
+            : activeFilters[comm].push(filterKey);
         
-        if(type === 'W') filtered = filtered.filter(d => d.is_woman);
-        else if(type === 'PSTM') filtered = filtered.filter(d => d.is_pstm);
-        else if(type === 'EX') filtered = filtered.filter(d => d.is_exser);
-        else if(type === 'DW') filtered = filtered.filter(d => d.is_dw);
-        else if(type === 'VI') filtered = filtered.filter(d => d.is_vi_lv);
-        else if(type === 'HI') filtered = filtered.filter(d => d.is_hi_hh);
-        else if(type === 'LD') filtered = filtered.filter(d => d.is_ld_cp);
-        else if(type === 'ASD') filtered = filtered.filter(d => d.is_asd_md);
-        
-        document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered, comm === 'OVERALL');
+        document.getElementById(`clear-${comm}`).style.display = activeFilters[comm].length > 0 ? 'block' : 'none';
+        applyFilters(comm);
     }
 
-    function renderList(list, showCommunityTag) {
-        if (!list.length) return '<p style="padding:20px; text-align:center; color:#9ca3af; font-size:0.8rem;">No data found.</p>';
-        
+    function clearFilters(comm) {
+        activeFilters[comm] = [];
+        document.getElementById(`chips-${comm}`).querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        document.getElementById(`clear-${comm}`).style.display = 'none';
+        applyFilters(comm);
+    }
+
+    function applyFilters(comm) {
+        let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
+        activeFilters[comm].forEach(key => filtered = filtered.filter(d => d[key] === true));
+        document.getElementById(`list-${comm}`).innerHTML = renderList(filtered, comm === 'OVERALL');
+    }
+
+    function renderList(list, showComm) {
+        if (!list.length) return '<p style="padding:20px; text-align:center; color:#9ca3af; font-size:0.7rem;">No records match these filters.</p>';
         return list.map((d, index) => {
             let tags = [];
-            if(showCommunityTag) tags.push(d.category);
+            if(showComm) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
-            if(d.is_exser) tags.push("EX");
-            if(d.is_dw) tags.push("DW");
-            if(d.is_vi_lv) tags.push("VI/LV");
             if(d.is_hi_hh) tags.push("HI/HH");
-            if(d.is_ld_cp) tags.push("LD/CP");
-            if(d.is_asd_md) tags.push("ASD/MD");
-
-            let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
-            
             return `
-                <div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb; align-items: center;">
-                    <div style="max-width: 70%;">
-                        <span style="font-weight:700; color: #1f2937;">${medal}${d.full_name}</span>
-                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform: uppercase; margin-top: 2px;">
-                            ${tags.join(' • ')}
-                        </span>
+                <div class="candidate-row">
+                    <div>
+                        <div style="font-weight:700; color:#374151; font-size:0.85rem;">${d.full_name}</div>
+                        <div style="font-size:0.55rem; color:var(--primary-purple); font-weight:800; margin-top:2px;">${tags.join(' • ')}</div>
                     </div>
                     <div style="text-align:right;">
-                        <span style="font-weight: 800; color: var(--primary-purple); font-size: 1.1rem;">${d.total_correct}</span>
-                        <div style="font-size:0.55rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
+                        <div style="font-weight:900; color:var(--primary-purple); font-size:1rem;">${d.total_correct}</div>
+                        <div style="font-size:0.5rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
                     </div>
                 </div>`;
         }).join('');
+    }
+
+    function toggleAccordion(header) {
+        const content = header.nextElementSibling;
+        const isOpen = content.classList.contains('open');
+        header.classList.toggle('active', !isOpen);
+        content.classList.toggle('open', !isOpen);
+        header.querySelector('.arrow').innerText = !isOpen ? '▴' : '▾';
     }
 
     function toggleAll(expand) {
-        document.querySelectorAll('#accordion-root .accordion-header').forEach(h => {
-            const content = h.nextElementSibling;
+        document.querySelectorAll('.accordion-header').forEach(h => {
             h.classList.toggle('active', expand);
-            content.classList.toggle('open', expand);
+            h.nextElementSibling.classList.toggle('open', expand);
             h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
         });
+    }
+
+    function copyShareLink() {
+        navigator.clipboard.writeText("Check your TNPSC Group 2A Mains rank here: " + window.location.href);
+        alert("Link copied! Share it in your study groups.");
     }
 
     loadDashboard();
