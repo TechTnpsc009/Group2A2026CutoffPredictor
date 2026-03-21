@@ -8,10 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --primary-purple: #7c3aed; --text-main: #1f2937; }
-        @keyframes subtleBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .blinking-dash { animation: subtleBlink 2s infinite; font-weight: 900; color: #9ca3af; display: inline-block; }
         
-        /* Chip Styles */
+        /* Chip Styles for Combined Filters */
         .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6; align-items: center; }
         .chip { 
             font-size: 0.6rem; font-weight: 800; padding: 6px 10px; border-radius: 20px; 
@@ -21,20 +19,23 @@
         .chip.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2); }
         .clear-link { font-size: 0.6rem; color: #ef4444; font-weight: 800; cursor: pointer; margin-left: auto; text-decoration: underline; }
 
-        /* General Dashboard UI */
-        .db-container { max-width: 600px; margin: auto; font-family: sans-serif; }
+        /* Dashboard UI */
+        .db-container { max-width: 600px; margin: auto; font-family: sans-serif; padding: 10px; }
         .accordion-item { margin-bottom: 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: white; overflow: hidden; }
         .accordion-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
         .accordion-header.active { background: var(--primary-purple); color: white; }
         .accordion-content { display: none; }
         .accordion-content.open { display: block; border-top: 1px solid #f3f4f6; }
         .candidate-row { display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb; align-items: center; }
-        .btn-outline { border: 1px solid #e5e7eb; background: white; cursor: pointer; border-radius: 6px; }
+        
+        /* Telegram & CTA Styles */
+        .tg-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: #24A1DE; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: 800; font-size: 0.9rem; margin: 15px 0; }
+        .share-card { background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 12px; text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="db-container" style="padding: 10px;">
+<div class="db-container">
     <header style="text-align: center; margin: 20px 0;">
         <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 55px; margin-bottom: 8px;">
         <h1 style="color:var(--primary-purple); margin:0; font-size:1.3rem; font-weight: 900;">Group 2A Mains 2026</h1>
@@ -43,22 +44,37 @@
         </div>
     </header>
 
-    <div style="display:flex; justify-content: space-between; align-items: center; margin: 20px 5px 10px 5px;">
-        <h3 style="font-size: 0.85rem; color: var(--text-main); margin:0; font-weight: 900; letter-spacing: 0.5px;">COMMUNAL BREAKDOWN</h3>
+    <a href="https://t.me/techt_npsc" class="tg-btn" target="_blank">
+        JOIN TELEGRAM CHANNEL FOR UPDATES
+    </a>
+
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+        <h4 style="margin:0 0 8px 0; color: #334155; font-size: 0.8rem; font-weight: 800;">EXPECTED CUTOFF ANALYSIS</h4>
+        <p style="margin:0; font-size: 0.7rem; color: #64748b; line-height: 1.4;">
+            Based on current data trends and paper difficulty, the safe score for <b>GT (General)</b> is estimated between <b>155-162</b>. Categories like <b>BCM</b> and <b>SCA</b> may see lower ranges. These are tentative and will update as more scores are added.
+        </p>
+    </div>
+
+    <div style="display:flex; justify-content: space-between; align-items: center; margin: 10px 5px;">
+        <h3 style="font-size: 0.85rem; color: var(--text-main); margin:0; font-weight: 900;">COMMUNAL RANKINGS</h3>
         <div style="display:flex; gap:6px;">
-            <button onclick="toggleAll(true)" class="btn-outline" style="font-size:0.55rem; padding:5px 10px; font-weight:800;">EXPAND ALL</button>
-            <button onclick="toggleAll(false)" class="btn-outline" style="font-size:0.55rem; padding:5px 10px; font-weight:800;">COLLAPSE</button>
+            <button onclick="toggleAll(true)" style="font-size:0.55rem; padding:5px 8px; font-weight:800; border:1px solid #ddd; background:white; border-radius:4px;">EXPAND</button>
+            <button onclick="toggleAll(false)" style="font-size:0.55rem; padding:5px 8px; font-weight:800; border:1px solid #ddd; background:white; border-radius:4px;">COLLAPSE</button>
         </div>
     </div>
 
     <div id="accordion-root">
-        <p style="text-align:center; padding:50px; color:#9ca3af; font-weight: 700;">Loading database...</p>
+        <p style="text-align:center; padding:50px; color:#9ca3af; font-weight: 700;">Loading real-time rankings...</p>
     </div>
 
-    <div style="margin-top: 30px; padding: 20px; background: #f5f3ff; border-radius: 15px; text-align: center;">
-        <p style="margin: 0 0 10px 0; font-size: 0.8rem; color: #5b21b6; font-weight: 800;">Not on the list yet?</p>
-        <a href="index.html" style="display: inline-block; background: var(--primary-purple); color: white; text-decoration: none; padding: 10px 25px; border-radius: 8px; font-weight: 900; font-size: 0.9rem;">ADD YOUR SCORE</a>
+    <div class="share-card">
+        <p style="margin: 0 0 10px 0; font-size: 0.8rem; color: #92400e; font-weight: 800;">Help us make the data more accurate!</p>
+        <button onclick="copyShareLink()" style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 0.8rem;">SHARE WITH FRIENDS</button>
     </div>
+
+    <footer style="text-align:center; margin-top: 30px; padding-bottom: 20px;">
+        <p style="font-size: 0.65rem; color: #9ca3af; font-weight: 600;">© 2026 TechTnpsc - Allwin-Sugitha Initiative</p>
+    </footer>
 </div>
 
 <script>
@@ -76,12 +92,9 @@
             .select('*')
             .order('total_correct', { ascending: false });
 
-        if (error) {
-            document.getElementById('accordion-root').innerHTML = '<p style="color:red; text-align:center;">Error loading rankings.</p>';
-            return;
-        }
+        if (error) return;
         allData = data;
-        document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
+        document.getElementById('total-badge').innerText = `Submissions: ${data.length}`;
         renderAccordions();
     }
 
@@ -90,25 +103,19 @@
         root.innerHTML = communities.map(comm => {
             const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
             activeFilters[comm] = []; 
-            
             const has = (key) => list.some(d => d[key]);
             
             return `
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div style="font-weight:900; font-size:0.9rem;">${comm} <span style="font-weight:600; font-size:0.65rem; opacity:0.7; margin-left:5px;">(${list.length})</span></div>
+                        <div style="font-weight:900; font-size:0.9rem;">${comm} <span style="font-weight:600; font-size:0.65rem; opacity:0.7;">(${list.length})</span></div>
                         <span class="arrow">▾</span>
                     </div>
                     <div class="accordion-content">
                         <div class="filter-chips" id="chips-${comm}">
                             ${has('is_woman') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_woman', this)">Woman</div>` : ''}
                             ${has('is_pstm') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_pstm', this)">PSTM</div>` : ''}
-                            ${has('is_exser') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_exser', this)">Ex-Ser</div>` : ''}
-                            ${has('is_dw') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_dw', this)">DW</div>` : ''}
                             ${has('is_hi_hh') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_hi_hh', this)">HI/HH</div>` : ''}
-                            ${has('is_vi_lv') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_vi_lv', this)">VI/LV</div>` : ''}
-                            ${has('is_ld_cp') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_ld_cp', this)">LD/CP</div>` : ''}
-                            ${has('is_asd_md') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_asd_md', this)">ASD/MD</div>` : ''}
                             <div class="clear-link" id="clear-${comm}" style="display:none;" onclick="clearFilters('${comm}')">Reset</div>
                         </div>
                         <div id="list-${comm}">${renderList(list, comm === 'OVERALL')}</div>
@@ -119,57 +126,43 @@
 
     function toggleChip(comm, filterKey, element) {
         element.classList.toggle('active');
+        activeFilters[comm].includes(filterKey) 
+            ? activeFilters[comm] = activeFilters[comm].filter(k => k !== filterKey) 
+            : activeFilters[comm].push(filterKey);
         
-        if (activeFilters[comm].includes(filterKey)) {
-            activeFilters[comm] = activeFilters[comm].filter(k => k !== filterKey);
-        } else {
-            activeFilters[comm].push(filterKey);
-        }
-
-        // Show/Hide Reset link
         document.getElementById(`clear-${comm}`).style.display = activeFilters[comm].length > 0 ? 'block' : 'none';
-
         applyFilters(comm);
     }
 
     function clearFilters(comm) {
         activeFilters[comm] = [];
-        const chipContainer = document.getElementById(`chips-${comm}`);
-        chipContainer.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        document.getElementById(`chips-${comm}`).querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         document.getElementById(`clear-${comm}`).style.display = 'none';
         applyFilters(comm);
     }
 
     function applyFilters(comm) {
         let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
-        activeFilters[comm].forEach(key => {
-            filtered = filtered.filter(d => d[key] === true);
-        });
+        activeFilters[comm].forEach(key => filtered = filtered.filter(d => d[key] === true));
         document.getElementById(`list-${comm}`).innerHTML = renderList(filtered, comm === 'OVERALL');
     }
 
     function renderList(list, showComm) {
-        if (!list.length) return '<p style="padding:30px; text-align:center; color:#9ca3af; font-size:0.75rem; font-weight:700;">No candidates match these criteria.</p>';
-        
+        if (!list.length) return '<p style="padding:20px; text-align:center; color:#9ca3af; font-size:0.7rem;">No records match these filters.</p>';
         return list.map((d, index) => {
             let tags = [];
             if(showComm) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
-            if(d.is_exser) tags.push("EX");
-            if(d.is_dw) tags.push("DW");
-            if(d.is_hi_hh || d.is_vi_lv || d.is_ld_cp || d.is_asd_md) tags.push("PwD");
-
+            if(d.is_hi_hh) tags.push("HI/HH");
             return `
                 <div class="candidate-row">
-                    <div style="max-width: 70%;">
-                        <span style="font-weight:700; color: #374151; font-size:0.85rem;">${d.full_name}</span>
-                        <span style="display:block; font-size:0.55rem; color:var(--primary-purple); font-weight:800; margin-top: 2px;">
-                            ${tags.join(' • ')}
-                        </span>
+                    <div>
+                        <div style="font-weight:700; color:#374151; font-size:0.85rem;">${d.full_name}</div>
+                        <div style="font-size:0.55rem; color:var(--primary-purple); font-weight:800; margin-top:2px;">${tags.join(' • ')}</div>
                     </div>
                     <div style="text-align:right;">
-                        <span style="font-weight: 900; color: var(--primary-purple); font-size: 1rem;">${d.total_correct}</span>
+                        <div style="font-weight:900; color:var(--primary-purple); font-size:1rem;">${d.total_correct}</div>
                         <div style="font-size:0.5rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
                     </div>
                 </div>`;
@@ -179,11 +172,6 @@
     function toggleAccordion(header) {
         const content = header.nextElementSibling;
         const isOpen = content.classList.contains('open');
-        
-        // Optional: Close others
-        // document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
-        // document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
-
         header.classList.toggle('active', !isOpen);
         content.classList.toggle('open', !isOpen);
         header.querySelector('.arrow').innerText = !isOpen ? '▴' : '▾';
@@ -191,11 +179,15 @@
 
     function toggleAll(expand) {
         document.querySelectorAll('.accordion-header').forEach(h => {
-            const content = h.nextElementSibling;
             h.classList.toggle('active', expand);
-            content.classList.toggle('open', expand);
+            h.nextElementSibling.classList.toggle('open', expand);
             h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
         });
+    }
+
+    function copyShareLink() {
+        navigator.clipboard.writeText("Check your TNPSC Group 2A Mains rank here: " + window.location.href);
+        alert("Link copied! Share it in your study groups.");
     }
 
     loadDashboard();
