@@ -13,28 +13,16 @@
         }
         .blinking-dash {
             animation: subtleBlink 2s infinite;
-            font-weight: 900;
-            color: #9ca3af;
-            display: inline-block;
+            font-weight: 900; color: #9ca3af; display: inline-block;
         }
 
         .share-container { margin-top: 20px; text-align: center; }
         .share-label { font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase; margin-bottom: 12px; }
-        .social-icons { display: flex; justify-content: center; gap: 15px; }
-        .icon-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .icon-circle:active { transform: scale(0.9); }
-        .whatsapp { background: #25D366; color: white; }
-        .telegram { background: #0088cc; color: white; }
-        .generic-share { background: #6366f1; color: white; }
-        .social-icons svg { width: 20px; height: 20px; fill: currentColor; }
-
-        /* Fix visibility when expanded */
+        
         .accordion-header.active h4, 
-        .accordion-header.active .arrow {
-            color: white !important;
-        }
+        .accordion-header.active .arrow { color: white !important; }
 
-        /* Combined Filter Chip Styles */
+        /* Combination Filter Chips */
         .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 15px; background: #f9fafb; border-bottom: 1px solid #f3f4f6; }
         .chip { 
             font-size: 0.55rem; font-weight: 800; padding: 5px 10px; border-radius: 15px; 
@@ -62,7 +50,6 @@
             <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.9rem; font-weight: 800;">Show Expected Cutoff</h4>
             <span class="arrow" style="font-weight:bold; color: var(--primary-purple);">▾</span>
         </div>
-        
         <div class="accordion-content" style="padding: 0 20px 20px 20px;">
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 10px; margin-bottom: 15px;">
@@ -99,16 +86,10 @@
         <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background: none; border: none; color: #9ca3af; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-bottom: 25px;">↑ Back to top</button>
         <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 15px; padding: 20px; margin-bottom: 20px;">
             <p style="margin: 0 0 15px 0; font-size: 0.85rem; color: #5b21b6; font-weight: 800;">Add your performance to the list!</p>
-            <a href="index.html" class="btn-primary" style="display: block; padding: 15px; text-decoration: none; border-radius: 10px; font-weight: 900; font-size: 1rem; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);">SUBMIT YOUR SCORE</a>
+            <a href="index.html" class="btn-primary" style="display: block; padding: 15px; text-decoration: none; border-radius: 10px; font-weight: 900; font-size: 1rem;">SUBMIT YOUR SCORE</a>
         </div>
-        
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; text-align: center;">
-            <p style="margin: 0 0 12px 0; font-size: 0.75rem; font-weight: 800; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px;">Get Instant Updates</p>
-            <a href="https://t.me/+jQ-3e_jl84cxOGE1" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #0088cc; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.2); width: 85%;">
-                <svg style="width:18px; height:18px; fill:currentColor;" viewBox="0 0 24 24"><path d="M11.944 0C5.347 0 0 5.347 0 11.944c0 6.597 5.347 11.944 11.944 11.944 6.596 0 11.944-5.347 11.944-11.944C23.888 5.347 18.54 0 11.944 0zm5.83 7.828l-1.972 9.308c-.148.663-.541.826-1.094.515l-3.004-2.212-1.45 1.394c-.16.16-.295.295-.605.295l.216-3.064 5.576-5.038c.242-.216-.053-.336-.374-.122L8.216 13.43l-2.973-.928c-.647-.202-.66-.647.135-.958l11.623-4.48c.538-.196 1.01.127.773.764z"/></svg>
-                JOIN TELEGRAM CHANNEL
-            </a>
-            <p style="margin-top: 10px; font-size: 0.6rem; color: #60a5fa; font-weight: 700;">Discussion & Cutoff Analysis</p>
+            <a href="https://t.me/+jQ-3e_jl84cxOGE1" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #0088cc; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; width: 85%;">JOIN TELEGRAM CHANNEL</a>
         </div>
     </div>
 </div>
@@ -116,30 +97,35 @@
 <script>
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
+    
+    // Fixed initialization for CDN usage
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
     const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
     const cutoffOrder = ['GT', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST'];
     let allData = [];
-    
-    // Track active filters for each category
     let currentFilters = {}; 
 
     async function loadDashboard() {
-        const { data, error } = await supabaseClient
-            .from('candidate_scores')
-            .select('*')
-            .order('total_correct', { ascending: false });
+        console.log("Starting database sync...");
+        try {
+            const { data, error } = await supabaseClient
+                .from('candidate_scores')
+                .select('*')
+                .order('total_correct', { ascending: false });
 
-        if (error) {
-            document.getElementById('accordion-root').innerHTML = '<p style="color:red; text-align:center;">Failed to load data.</p>';
-            return;
+            if (error) throw error;
+
+            allData = data;
+            document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
+            updatePredictionStats(data.length);
+            renderAccordions();
+            renderCutoffTable();
+            console.log("Sync complete.");
+        } catch (err) {
+            console.error("Database Error:", err);
+            document.getElementById('accordion-root').innerHTML = `<p style="color:red; text-align:center; padding:20px;">Error connecting to database. Please check your internet or Supabase keys.</p>`;
         }
-        allData = data;
-        document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
-        updatePredictionStats(data.length);
-        renderAccordions();
-        renderCutoffTable();
     }
 
     function toggleAccordion(header) {
@@ -161,10 +147,9 @@
 
     function updatePredictionStats(count) {
         const progressBar = document.getElementById('sync-progress');
-        const target = 1000;
-        const progressPercent = Math.min((count / target) * 100, 100).toFixed(0);
-        progressBar.style.width = progressPercent + "%";
-        document.getElementById('data-goal').innerText = `Sample Progress: ${progressPercent}% (${count}/${target})`;
+        const progressPercent = Math.min((count / 1000) * 100, 100).toFixed(0);
+        if(progressBar) progressBar.style.width = progressPercent + "%";
+        document.getElementById('data-goal').innerText = `Sample Progress: ${progressPercent}% (${count}/1000)`;
     }
 
     function renderAccordions() {
@@ -172,7 +157,7 @@
         root.innerHTML = communities.map(comm => {
             const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
             const has = (key) => list.some(d => d[key]);
-            currentFilters[comm] = []; // Initialize empty filters
+            currentFilters[comm] = [];
 
             return `
                 <div class="accordion-item" id="item-${comm}">
@@ -199,29 +184,24 @@
 
     function toggleChip(comm, filterKey, element) {
         element.classList.toggle('active');
-        
-        // Add or remove from currentFilters array
         if (currentFilters[comm].includes(filterKey)) {
             currentFilters[comm] = currentFilters[comm].filter(k => k !== filterKey);
         } else {
             currentFilters[comm].push(filterKey);
         }
 
-        // Apply all selected filters
         let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
         currentFilters[comm].forEach(key => {
             filtered = filtered.filter(d => d[key] === true);
         });
-
         document.getElementById(`list-container-${comm}`).innerHTML = renderList(filtered, comm === 'OVERALL');
     }
 
-    function renderList(list, showCommunityTag) {
+    function renderList(list, showTag) {
         if (!list.length) return '<p style="padding:20px; text-align:center; color:#9ca3af; font-size:0.8rem;">No matches found.</p>';
-        
         return list.map((d, index) => {
             let tags = [];
-            if(showCommunityTag) tags.push(d.category);
+            if(showTag) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
             if(d.is_exser) tags.push("EX");
@@ -230,17 +210,31 @@
             if(d.is_hi_hh) tags.push("HI/HH");
             if(d.is_ld_cp) tags.push("LD/CP");
             if(d.is_asd_md) tags.push("ASD/MD");
-
             let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
-            
             return `
                 <div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb; align-items: center;">
                     <div style="max-width: 70%;">
                         <span style="font-weight:700; color: #1f2937;">${medal}${d.full_name}</span>
-                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform: uppercase; margin-top: 2px;">
-                            ${tags.join(' • ')}
-                        </span>
+                        <span style="display:block; font-size:0.6rem; color:var(--primary-purple); font-weight:800; text-transform: uppercase; margin-top: 2px;">${tags.join(' • ')}</span>
                     </div>
                     <div style="text-align:right;">
                         <span style="font-weight: 800; color: var(--primary-purple); font-size: 1.1rem;">${d.total_correct}</span>
-                        <div style="font-size:0.55rem; color:#9
+                        <div style="font-size:0.55rem; color:#9ca3af; font-weight:bold;">RANK ${index + 1}</div>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function toggleAll(expand) {
+        document.querySelectorAll('#accordion-root .accordion-header').forEach(h => {
+            const content = h.nextElementSibling;
+            h.classList.toggle('active', expand);
+            content.classList.toggle('open', expand);
+            h.querySelector('.arrow').innerText = expand ? '▴' : '▾';
+        });
+    }
+
+    loadDashboard();
+</script>
+</body>
+</html>
