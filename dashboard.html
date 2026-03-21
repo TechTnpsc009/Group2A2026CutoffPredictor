@@ -18,7 +18,14 @@
 
         .share-container { margin-top: 20px; text-align: center; }
         .share-label { font-size: 0.65rem; font-weight: 800; color: #9ca3af; text-transform: uppercase; margin-bottom: 12px; }
-        
+        .social-icons { display: flex; justify-content: center; gap: 15px; }
+        .icon-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .icon-circle:active { transform: scale(0.9); }
+        .whatsapp { background: #25D366; color: white; }
+        .telegram { background: #0088cc; color: white; }
+        .generic-share { background: #6366f1; color: white; }
+        .social-icons svg { width: 20px; height: 20px; fill: currentColor; }
+
         .accordion-header.active h4, 
         .accordion-header.active .arrow { color: white !important; }
 
@@ -50,6 +57,7 @@
             <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.9rem; font-weight: 800;">Show Expected Cutoff</h4>
             <span class="arrow" style="font-weight:bold; color: var(--primary-purple);">▾</span>
         </div>
+        
         <div class="accordion-content" style="padding: 0 20px 20px 20px;">
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 10px; margin-bottom: 15px;">
@@ -62,7 +70,23 @@
                     <tbody id="cutoff-table-body"></tbody>
                 </table>
             </div>
-            <p style="margin: 5px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700; text-align: center;">Waiting for 1000 submissions for precision trends.</p>
+
+            <div class="share-container">
+                <div class="share-label">Share with other aspirants</div>
+                <div class="social-icons">
+                    <button class="icon-circle whatsapp" onclick="socialShare('wa')">
+                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </button>
+                    <button class="icon-circle telegram" onclick="socialShare('tg')">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 4.084-1.362 5.441-.168.56-.505 1.258-1.123 1.258-.23 0-.46-.07-.665-.19-.505-.297-1.12-.662-1.83-1.077l-1.38-1.053c-.354-.27-.315-.436.086-.786.1-.088 1.83-1.656 1.83-1.656.372-.34.12-.53-.29-.27l-2.613 1.666c-.347.22-.663.29-.948.272-.34-.02-.692-.125-1.032-.236-.34-.112-.68-.225-1.02-.337-.367-.12-.607-.293-.585-.563.023-.27.315-.412.877-.577l7.732-2.985c.345-.135.69-.27 1.035-.27.368 0 .615.15.713.435.067.195.045.548-.022.93z"/></svg>
+                    </button>
+                    <button class="icon-circle generic-share" onclick="socialShare('share')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </button>
+                </div>
+            </div>
+
+            <p style="margin: 20px 0 5px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700; text-align: center;">Waiting for 1000 submissions for precision trends.</p>
             <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 10px;">
                 <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
             </div>
@@ -97,8 +121,6 @@
 <script>
     const SB_URL = "https://tmxtrpcxgowyvsijptjy.supabase.co";
     const SB_KEY = "sb_publishable_HyUD5W3MBGCUNYiNLOZHKQ_mMVcKa1-";
-    
-    // Fixed initialization for CDN usage
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
     const communities = ['OVERALL', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST', 'GT'];
@@ -107,24 +129,33 @@
     let currentFilters = {}; 
 
     async function loadDashboard() {
-        console.log("Starting database sync...");
         try {
             const { data, error } = await supabaseClient
                 .from('candidate_scores')
                 .select('*')
                 .order('total_correct', { ascending: false });
-
             if (error) throw error;
-
             allData = data;
             document.getElementById('total-badge').innerText = `Total Submissions: ${data.length}`;
             updatePredictionStats(data.length);
             renderAccordions();
             renderCutoffTable();
-            console.log("Sync complete.");
         } catch (err) {
-            console.error("Database Error:", err);
-            document.getElementById('accordion-root').innerHTML = `<p style="color:red; text-align:center; padding:20px;">Error connecting to database. Please check your internet or Supabase keys.</p>`;
+            document.getElementById('accordion-root').innerHTML = `<p style="color:red; text-align:center; padding:20px;">Sync Error. Check connection.</p>`;
+        }
+    }
+
+    // Restored Social Share Function
+    function socialShare(platform) {
+        const url = window.location.origin;
+        const msg = "Check your TNPSC Group 2A rank and expected cutoff here: " + url;
+        if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+        else if (platform === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`);
+        else if (navigator.share) {
+            navigator.share({ title: 'TNPSC Rankings', url });
+        } else {
+            navigator.clipboard.writeText(url);
+            alert('Link copied to clipboard!');
         }
     }
 
@@ -158,7 +189,6 @@
             const list = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
             const has = (key) => list.some(d => d[key]);
             currentFilters[comm] = [];
-
             return `
                 <div class="accordion-item" id="item-${comm}">
                     <div class="accordion-header" onclick="toggleAccordion(this)" style="${comm === 'OVERALL' ? 'border-left: 4px solid var(--primary-purple);' : ''}">
@@ -189,7 +219,6 @@
         } else {
             currentFilters[comm].push(filterKey);
         }
-
         let filtered = comm === 'OVERALL' ? allData : allData.filter(d => d.category === comm);
         currentFilters[comm].forEach(key => {
             filtered = filtered.filter(d => d[key] === true);
@@ -204,12 +233,7 @@
             if(showTag) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
-            if(d.is_exser) tags.push("EX");
-            if(d.is_dw) tags.push("DW");
-            if(d.is_vi_lv) tags.push("VI/LV");
             if(d.is_hi_hh) tags.push("HI/HH");
-            if(d.is_ld_cp) tags.push("LD/CP");
-            if(d.is_asd_md) tags.push("ASD/MD");
             let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
             return `
                 <div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb; align-items: center;">
