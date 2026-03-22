@@ -154,7 +154,7 @@
         if (document.getElementById('hp_field').value !== "") return;
 
         const rawName = document.getElementById('full_name').value.trim();
-        const isTester = rawName.toLowerCase().startsWith('riya');
+        const isTester = rawName.toLowerCase().startsWith('aspirant');
 
         if (!isTester && localStorage.getItem('tnpsc_submitted_2026')) {
             showStatus("⚠️ You have already submitted your marks!", "#ef4444");
