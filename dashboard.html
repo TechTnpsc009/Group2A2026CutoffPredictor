@@ -85,6 +85,12 @@
                     </button>
                 </div>
             </div>
+
+            <p style="margin: 20px 0 5px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700; text-align: center;">Waiting for 1000+ submissions for precision trends.</p>
+            <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 10px;">
+                <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
+            </div>
+            <p id="data-goal" style="font-size: 0.55rem; color: #9ca3af; margin-top: 5px; font-weight: 600; text-align: center;">Sample Progress: 0%</p>
         </div>
     </div>
 
@@ -181,7 +187,6 @@
         </tr>
     `).join('');
 }
-
     function updatePredictionStats(count) {
         const progressBar = document.getElementById('sync-progress');
         const progressPercent = Math.min((count / 1000) * 100, 100).toFixed(0);
