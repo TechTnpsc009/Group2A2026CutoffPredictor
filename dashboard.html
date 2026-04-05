@@ -85,12 +85,6 @@
                     </button>
                 </div>
             </div>
-
-            <p style="margin: 20px 0 5px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700; text-align: center;">Waiting for 1000+ submissions for precision trends.</p>
-            <div style="width: 100%; height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; margin-top: 10px;">
-                <div id="sync-progress" style="height: 100%; background: #10b981; width: 0%; transition: width 1s ease-in-out;"></div>
-            </div>
-            <p id="data-goal" style="font-size: 0.55rem; color: #9ca3af; margin-top: 5px; font-weight: 600; text-align: center;">Sample Progress: 0%</p>
         </div>
     </div>
 
@@ -166,15 +160,27 @@
         header.querySelector('.arrow').innerText = content.classList.contains('open') ? '▴' : '▾';
     }
 
-    function renderCutoffTable() {
-        const tableBody = document.getElementById('cutoff-table-body');
-        tableBody.innerHTML = cutoffOrder.map(comm => `
-            <tr style="border-bottom: 1px solid #f3f4f6;">
-                <td style="padding: 8px; font-weight: 800; color: #374151;">${comm}</td>
-                <td style="padding: 8px; text-align: center;"><span class="blinking-dash">—</span></td>
-            </tr>
-        `).join('');
-    }
+   function renderCutoffTable() {
+    const tableBody = document.getElementById('cutoff-table-body');
+    const cutoffData = {
+        GT: 150,
+        BC: 147,
+        BCM: 140,
+        MBC: 146,
+        SC: 139,
+        SCA: 133,
+        ST: 135
+    };
+
+    tableBody.innerHTML = cutoffOrder.map(comm => `
+        <tr style="border-bottom: 1px solid #f3f4f6;">
+            <td style="padding: 8px; font-weight: 800; color: #374151;">${comm}</td>
+            <td style="padding: 8px; text-align: center; font-weight: 800; color: var(--primary-purple);">
+                ${cutoffData[comm]}
+            </td>
+        </tr>
+    `).join('');
+}
 
     function updatePredictionStats(count) {
         const progressBar = document.getElementById('sync-progress');
