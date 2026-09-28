@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rankings Dashboard | TechTnpsc</title>
+    <title>Group 1 Rankings Dashboard | TechTnpsc</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=0Ogv2ETuQazg6ElNwhCJENvsxs83BfnOu1ual7mYgEDgJIRLWe8lIk1pxHGAB8STdbCzZSJcOYMEBWB0QcDO4aiB04eAlefXNnpWlZ65Mw8L-0tItwDLtpOcJ-6xvG-F7f59vEHioRu41VLFOPr8ED3Id0Hh5hKFdq9F-rKz1iGH9sSS-tMrnxXeUhO14cZTurS6g0kjNRp_G0qCouFL56W21mxOzucACVg3dzloJlRIWPWgFeHoSsPTDW2HEZ7pNj3Ms6UaOxtk3CaDbiRWIbhDV5EAvyxtVZzXVGlsqV0UoTlwcfKXIuIdGOtEDD1D" charset="UTF-8"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @keyframes subtleBlink {
             0%, 100% { opacity: 1; }
@@ -45,7 +45,7 @@
     <header class="db-header" style="margin-top: 20px;">
         <div style="text-align: center; width: 100%;">
             <img src="images/techtnpsclogo.PNG" alt="Logo" style="max-height: 60px; width: auto; margin-bottom: 10px;">
-            <h1 style="color:var(--primary-purple); margin:0; font-size:1.4rem; font-weight: 900;">TNPSC Group 2A Mains 2026</h1>
+            <h1 style="color:var(--primary-purple); margin:0; font-size:1.4rem; font-weight: 900;">TNPSC Group 1 Prelims 2026</h1>
             <div id="total-badge" style="display: inline-block; background: var(--primary-purple); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; margin-top: 10px;">
                 Total Submissions: --
             </div>
@@ -142,7 +142,7 @@
     // Restored Social Share Function
     function socialShare(platform) {
         const url = window.location.origin;
-        const msg = "Check your TNPSC Group 2A rank and expected cutoff here: " + url;
+        const msg = "Check your TNPSC Group 1 rank and expected cutoff here: " + url;
         if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
         else if (platform === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`);
         else if (navigator.share) {
@@ -199,12 +199,6 @@
                         <div class="filter-chips">
                             ${has('is_woman') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_woman', this)">Woman</div>` : ''}
                             ${has('is_pstm') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_pstm', this)">PSTM</div>` : ''}
-                            ${has('is_exser') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_exser', this)">Ex-Ser</div>` : ''}
-                            ${has('is_dw') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_dw', this)">DW</div>` : ''}
-                            ${has('is_hi_hh') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_hi_hh', this)">HI/HH</div>` : ''}
-                            ${has('is_vi_lv') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_vi_lv', this)">VI/LV</div>` : ''}
-                            ${has('is_ld_cp') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_ld_cp', this)">LD/CP</div>` : ''}
-                            ${has('is_asd_md') ? `<div class="chip" onclick="toggleChip('${comm}', 'is_asd_md', this)">ASD/MD</div>` : ''}
                         </div>
                         <div id="list-container-${comm}">${renderList(list, comm === 'OVERALL')}</div>
                     </div>
@@ -233,7 +227,6 @@
             if(showTag) tags.push(d.category);
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
-            if(d.is_hi_hh) tags.push("HI/HH");
             let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
             return `
                 <div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9fafb; align-items: center;">
@@ -258,12 +251,6 @@
             // Added all missing category checks here
             if(d.is_woman) tags.push("W");
             if(d.is_pstm) tags.push("PSTM");
-            if(d.is_exser) tags.push("EX");
-            if(d.is_dw) tags.push("DW");
-            if(d.is_hi_hh) tags.push("HI/HH");
-            if(d.is_vi_lv) tags.push("VI/LV");
-            if(d.is_ld_cp) tags.push("LD/CP");
-            if(d.is_asd_md) tags.push("ASD/MD");
 
             let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
             return `
