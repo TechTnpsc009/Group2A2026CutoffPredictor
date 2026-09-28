@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechTnpsc | Group 2A Cutoff Predictor</title>
+    <title>TechTnpsc | Group 1 Cutoff Predictor</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=gE1AKkTZKhoTAOlCAqluACi59OyKmRImDl-NMJiZvqvzSOj-PCCM2SRcDdvNMcDjt96d_l4ZV9aFn1TsB8NYdx54JyXCNpoVkx_D9mfTys7JG1OR9OCS5Zz55jX0Y2jPJv33TwGmbFeYRqZ2WFctRR_bmzYh3B7WuYmFq61ViVvrBqTnegij9Hs5CGLwrMa86_QNjxpA4_9bofmS02bvEMrsszuZ7z6x3XgnD7gOd19iZhzF2NmvjBkgyXrSUMdTwhDkGyT-8vUx2qhM9AZVhuGfx99gpP3gkhcl7HyRynn-ivYHcN7Mc5snOCk0YPXC" charset="UTF-8"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Social Sharing Styles */
         .share-container { margin-top: 30px; padding-top: 20px; border-top: 1px dashed #e5e7eb; text-align: center; }
@@ -28,7 +28,7 @@
         <div style="text-align: center; margin-bottom: 25px;">
             <img src="images/techtnpsclogo.PNG" alt="TechTnpsc Logo" style="max-height: 70px; width: auto; margin-bottom: 10px;">
             <h3 style="color: var(--primary-purple); font-weight: 800; letter-spacing: 1px; margin: 0 0 5px 0; font-size: 1.2rem;">
-                TNPSC GROUP 2A MAINS 2026
+                TNPSC GROUP 1 PRELIMS 2026
             </h3>
             <div style="width: 40px; height: 3px; background: var(--primary-purple); margin: 0 auto; border-radius: 2px;"></div>
         </div>
@@ -53,7 +53,7 @@
             </div>
 
             <div class="field">
-                <label for="total_correct">Total Correct Questions (Max 193 - Excluding 7 Expert committe Qns)</label>
+                <label for="total_correct">Total Correct Questions (Max 200)</label>
                 <input type="number" id="total_correct" placeholder="" min="0" max="200" required>
             </div>
 
@@ -77,28 +77,6 @@
                 </label>
                 <label class="check-item">
                     <input type="checkbox" id="is_pstm"> PSTM (Tamil Medium)
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_exser"> Ex-Serviceman
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_dw"> Destitute Widow (DW)
-                </label>
-                
-                <div class="dotted-divider"></div>
-                <p style="font-size:0.7rem; font-weight:800; color:var(--primary-purple); margin-bottom:10px;">SPECIAL CATEGORY (PwD)</p>
-                
-                <label class="check-item">
-                    <input type="checkbox" id="is_vi_lv"> VI / LV (Visual)
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_hi_hh"> HI / HH (Hearing)
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_ld_cp"> LD / CP / LC / DF / AC
-                </label>
-                <label class="check-item">
-                    <input type="checkbox" id="is_asd_md"> ASD / SLD / MI / MD
                 </label>
             </div>
 
@@ -143,7 +121,7 @@
 
     function socialShare(platform) {
         const url = window.location.href;
-        const msg = "Check your TNPSC Group 2A rank and expected cutoff here: " + url;
+        const msg = "Check your TNPSC Group 1 rank and expected cutoff here: " + url;
         if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
         else if (platform === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`);
         else if (navigator.share) navigator.share({ title: 'TechTnpsc Cutoff', url });
@@ -185,12 +163,6 @@
                 category: document.getElementById('category').value,
                 is_woman: document.getElementById('is_woman').checked,
                 is_pstm: document.getElementById('is_pstm').checked,
-                is_exser: document.getElementById('is_exser').checked,
-                is_dw: document.getElementById('is_dw').checked,
-                is_vi_lv: document.getElementById('is_vi_lv').checked,
-                is_hi_hh: document.getElementById('is_hi_hh').checked,
-                is_ld_cp: document.getElementById('is_ld_cp').checked,
-                is_asd_md: document.getElementById('is_asd_md').checked,
                 ip_address: userIp
             };
 
