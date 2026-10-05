@@ -54,7 +54,7 @@
 
     <div class="accordion-item" style="margin: 20px 0; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); background: white; overflow: hidden;">
         <div class="accordion-header" onclick="toggleAccordion(this)" style="padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-            <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.9rem; font-weight: 800;">Show Expected Cutoff</h4>
+            <h4 style="margin: 0; color: var(--primary-purple); font-size: 0.9rem; font-weight: 800;">Click Here To Show Expected Cutoff</h4>
             <span class="arrow" style="font-weight:bold; color: var(--primary-purple);">▾</span>
         </div>
         
@@ -163,13 +163,13 @@
    function renderCutoffTable() {
     const tableBody = document.getElementById('cutoff-table-body');
     const cutoffData = {
-        GT: 150,
-        BC: 147,
-        BCM: 140,
-        MBC: 146,
-        SC: 139,
-        SCA: 133,
-        ST: 135
+        GT: -,
+        BC: -,
+        BCM: -,
+        MBC: -,
+        SC: -,
+        SCA: -,
+        ST: -
     };
 
     tableBody.innerHTML = cutoffOrder.map(comm => `
